@@ -36,7 +36,7 @@ if ( ! defined( 'GIVE_CONVERTKIT_BASENAME' ) ) {
 function give_add_convertkit_licensing() {
 
 	if ( class_exists( 'Give_License' ) ) {
-		new Give_License( __FILE__, 'ConvertKit', GIVE_CONVERTKIT_VERSION, 'Devin Walker' );
+		new Give_License( __FILE__, 'ConvertKit', GIVE_CONVERTKIT_VERSION, 'WordImpress' );
 	}
 
 }
