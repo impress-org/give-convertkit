@@ -40,6 +40,7 @@ class Give_ConvertKit {
 		$this->id           = 'convertkit';
 		$this->label        = 'ConvertKit';
 		$this->give_options = give_get_settings();
+		$this->api_key      = give_get_option( 'give_convertkit_api', '' );
 
 		add_action( 'init', array( $this, 'textdomain' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_metabox' ) );
@@ -499,35 +500,37 @@ class Give_ConvertKit {
 	 */
 	public function get_lists() {
 
-		$lists = get_transient( 'give_convertkit_lists' );
+		if ( ! empty( $this->api_key ) ) {
 
-		//Transient data? Return it.
-		if ( ! empty( $lists ) && ! empty( $lists->forms ) ) {
-			foreach ( $lists->forms as $key => $form ) {
+			$lists = get_transient( 'give_convertkit_lists' );
 
-				$this->lists[ $form->id ] = $form->name;
+			if ( false === $lists ) {
 
-			}
+				$request = wp_remote_get( 'https://api.convertkit.com/v3/forms?api_key=' . $this->api_key );
 
-			return (array) $this->lists;
-		}
+				if ( ! is_wp_error( $request ) && 200 == wp_remote_retrieve_response_code( $request ) ) {
 
-		//Get fresh data. Need API key to continue.
-		if ( ! empty( $this->api_key ) && false === $lists ) {
+					$lists = json_decode( wp_remote_retrieve_body( $request ) );
 
-			$request = wp_remote_get( 'https://api.convertkit.com/v3/forms?api_key=' . $this->api_key );
+					set_transient( 'give_convertkit_lists', $lists, 24 * 24 * 24 );
 
-			if ( ! is_wp_error( $request ) && 200 == wp_remote_retrieve_response_code( $request ) ) {
-
-				$lists = json_decode( wp_remote_retrieve_body( $request ) );
-
-				set_transient( 'give_convertkit_lists', $lists, 24 * 24 * 24 );
+				}
 
 			}
 
+			if ( ! empty( $lists ) && ! empty( $lists->forms ) ) {
+
+				foreach ( $lists->forms as $key => $form ) {
+
+					$this->lists[ $form->id ] = $form->name;
+
+				}
+
+			}
+
 		}
 
-		return (array) $this->lists;
+		return $this->lists;
 
 	}
 
@@ -698,7 +701,6 @@ class Give_ConvertKit {
 
 		//Delete transient.
 		delete_transient( 'give_convertkit_lists' );
-
 		$lists = '';
 
 		if ( isset( $_POST['field_type'] ) && $_POST['field_type'] == 'select' ) {
