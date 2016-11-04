@@ -2,7 +2,7 @@
  * Give ConvertKit Admin Styles
  */
 
-.give-convertkit-list-wrap {
+.give-convertkit-list-wrap, .give-convertkit-tag-wrap {
 	border: 1px solid #ccc;
 	background: #FDFDFD;
 	width: auto;
@@ -11,12 +11,12 @@
 	padding: 7px 10px;
 }
 
-.give-convertkit-list-wrap label {
+.give-convertkit-list-wrap label, .give-convertkit-tag-wrap label {
 	display: block;
 	margin-bottom: 3px;
 }
 
-.give-convertkit-list-wrap label.group {
+.give-convertkit-list-wrap label.group, .give-convertkit-tag-wrap label.group {
 	margin-left: 30px;
 	font-size: 13px;
 	font-style: italic;
