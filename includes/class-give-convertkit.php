@@ -47,7 +47,7 @@ class Give_ConvertKit {
 		$this->id           = 'convertkit';
 		$this->label        = 'ConvertKit';
 		$this->give_options = give_get_settings();
-		$this->api_key      = give_get_option( 'give_convertkit_api', '' );
+		$this->api_key      = trim( give_get_option( 'give_convertkit_api', '' ) );
 
 		add_action( 'init', array( $this, 'textdomain' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_metabox' ) );
@@ -66,13 +66,18 @@ class Give_ConvertKit {
 		//Get it started.
 		add_action( 'init', array( $this, 'init' ) );
 
-
+		// Custom fields.
 		add_action( 'cmb2_render_give_convertkit_list_select', array(
 			$this,
 			'give_convertkit_list_select',
 		), 10, 5 );
+		add_action( 'cmb2_render_give_convertkit_tag_list', array(
+			$this,
+			'give_convertkit_tag_list',
+		), 10, 5 );
 
 		add_action( 'wp_ajax_give_reset_convertkit_lists', array( $this, 'give_reset_convertkit_lists' ) );
+		add_action( 'wp_ajax_give_reset_convertkit_tags', array( $this, 'give_reset_convertkit_tags' ) );
 
 	}
 
@@ -109,27 +114,26 @@ class Give_ConvertKit {
 		$css_dir = GIVE_CONVERTKIT_URL . 'assets/css/';
 
 		wp_register_script( 'give_' . $this->id . '_admin_ajax_js', $js_dir . 'admin-ajax.js', array( 'jquery' ) );
+		wp_register_style( 'give_' . $this->id . '_admin_css', $css_dir . 'admin-forms.css', GIVE_CONVERTKIT_VERSION );
+		wp_register_script( 'give_' . $this->id . '_admin_forms_scripts', $js_dir . 'admin-forms.js', array( 'jquery' ), GIVE_CONVERTKIT_VERSION, false );
 
 		//Forms CPT Script.
 		if ( $post_type === 'give_forms' ) {
 
 			//CSS.
-			wp_register_style( 'give_' . $this->id . '_admin_css', $css_dir . 'admin-forms.css', GIVE_CONVERTKIT_VERSION );
 			wp_enqueue_style( 'give_' . $this->id . '_admin_css' );
 
-
-			wp_enqueue_script( 'give_' . $this->id . '_admin_ajax_js' );
-
-
 			//JS.
-			wp_register_script( 'give_' . $this->id . '_admin_forms_scripts', $js_dir . 'admin-forms.js', array( 'jquery' ), GIVE_CONVERTKIT_VERSION, false );
 			wp_enqueue_script( 'give_' . $this->id . '_admin_forms_scripts' );
+			wp_enqueue_script( 'give_' . $this->id . '_admin_ajax_js' );
 		}
 
 		//Admin settings.
 		if ( $hook == 'give_forms_page_give-settings' ) {
 
+			//JS/CSS.
 			wp_enqueue_script( 'give_' . $this->id . '_admin_ajax_js' );
+			wp_enqueue_style( 'give_' . $this->id . '_admin_css' );
 
 		}
 
@@ -237,7 +241,7 @@ class Give_ConvertKit {
 		$override_option = get_post_meta( $form_id, '_give_' . $this->id . '_override_option', true );
 
 		//Use custom lists from this form?
-		if ( $override_option !== 'customize' || empty( $form_lists ) ) {
+		if ( $override_option !== 'customize' || empty( $lists ) ) {
 			//Not set so use global list.
 			$lists = array( 0 => give_get_option( 'give_' . $this->id . '_list' ) );
 		}
@@ -254,17 +258,25 @@ class Give_ConvertKit {
 			$this->subscribe_email( $payment_data['user_info'], $lists );
 		}
 
+		//Use custom lists from this form?
+		if ( $override_option !== 'customize' || empty( $tags ) ) {
+			//Not set so use global tags.
+			$tags = give_get_option( '_give_' . $this->id . '_tags' );
+		}
 
-		//Subscribe Tags if array.
-		if ( is_array( $tags ) ) {
-			$tags = array_unique( $tags );
-			foreach ( $tags as $tag ) {
-				//Subscribe the donor to the subscriber tag.
-				$this->subscribe_email( $payment_data['user_info'], false, $tag );
+		//Subscribe to tags
+		if ( ! empty( $tags ) ) {
+			//Subscribe Tags if array.
+			if ( is_array( $tags ) ) {
+				$tags = array_unique( $tags );
+				foreach ( $tags as $tag ) {
+					//Subscribe the donor to the subscriber tag.
+					$this->subscribe_email( $payment_data['user_info'], false, $tag );
+				}
+			} else {
+				//Subscribe to single tag.
+				$this->subscribe_email( $payment_data['user_info'], $tags );
 			}
-		} else {
-			//Subscribe to single tag.
-			$this->subscribe_email( $payment_data['user_info'], $lists );
 		}
 
 	}
@@ -272,13 +284,13 @@ class Give_ConvertKit {
 	/**
 	 * Subscribe an email to a list.
 	 *
-	 * @param array $user_info
-	 * @param bool  $list_id
-	 * @param array $tags
+	 * @param array       $user_info
+	 * @param bool|string $list_id
+	 * @param bool|string $tag_id
 	 *
 	 * @return bool
 	 */
-	public function subscribe_email( $user_info = array(), $list_id = false, $tags = array() ) {
+	public function subscribe_email( $user_info = array(), $list_id = false, $tag_id = false ) {
 
 		// Make sure an API key has been entered.
 		if ( empty( $this->api_key ) ) {
@@ -301,51 +313,40 @@ class Give_ConvertKit {
 
 		$return = false;
 
+		//Subscribe to Lists (Forms). Don't subscribe is $tag_id param is false.
+		if ( empty( $tag_id ) ) {
+			//Hit the API.
+			$request = wp_remote_post(
+				'https://api.convertkit.com/v3/forms/' . $list_id . '/subscribe?api_key=' . $this->api_key,
+				array(
+					'body'    => $args,
+					'timeout' => 30,
+				)
+			);
 
-		//Subscribe tags
-		if ( ! empty( $lists ) ) {
-
-			foreach ( $lists as $list ) {
-
-				//Hit the API.
-				$request = wp_remote_post(
-					'https://api.convertkit.com/v3/forms/' . $list_id . '/subscribe?api_key=' . $this->api_key,
-					array(
-						'body'    => $args,
-						'timeout' => 30,
-					)
-				);
-
-				//Success!
-				if ( ! is_wp_error( $request ) && 200 == wp_remote_retrieve_response_code( $request ) ) {
-					//@TODO: Write to donation payment notes
-					$return = true;
-				}
-
+			//Success!
+			if ( ! is_wp_error( $request ) && 200 == wp_remote_retrieve_response_code( $request ) ) {
+				$return = true;
 			}
 		}
 
-		//Subscribe Tags.
-		if ( ! empty( $tags ) ) {
+		//Subscribe to Tags.
+		if ( ! empty( $tag_id ) ) {
+			//Hit the API.
+			$request = wp_remote_post(
+				'https://api.convertkit.com/v3/tags/' . $tag_id . '/subscribe?api_key=' . $this->api_key,
+				array(
+					'body'    => $args,
+					'timeout' => 15,
+				)
+			);
 
-			foreach ( $tags as $tag ) {
-
-				//Hit the API.
-				$request = wp_remote_post(
-					'https://api.convertkit.com/v3/tags/' . $tag . '/subscribe?api_key=' . $this->api_key,
-					array(
-						'body'    => $args,
-						'timeout' => 15,
-					)
-				);
-
-				//Success!
-				if ( ! is_wp_error( $request ) && 200 == wp_remote_retrieve_response_code( $request ) ) {
-					//@TODO: Write to donation payment notes
-					$return = true;
-				}
-
+			//Success!
+			if ( ! is_wp_error( $request ) && 200 == wp_remote_retrieve_response_code( $request ) ) {
+				//@TODO: Write to donation payment notes
+				$return = true;
 			}
+
 
 		}
 
@@ -397,6 +398,10 @@ class Give_ConvertKit {
 
 		//Using a custom label?
 		$custom_label = get_post_meta( $post->ID, '_give_' . $this->id . '_custom_label', true );
+
+		//Form select
+		$list_value = get_post_meta( $post->ID, '_give_' . $this->id, true );
+		$list_value = ! empty( $list_value ) ? $list_value : $this->give_options[ 'give_' . $this->id . '_list' ];
 
 		//Global label
 		$global_label = isset( $this->give_options[ 'give_' . $this->id . '_label' ] ) ? $this->give_options[ 'give_' . $this->id . '_label' ] : __( 'Signup for the newsletter', 'give-convertkit' );;
@@ -462,7 +467,6 @@ class Give_ConvertKit {
 				      style="margin: 0 0 10px;"><?php _e( 'Customize the newsletter opt-in option for this form.', 'give-convertkit' ); ?></span>
 
 				<ul class="cmb2-radio-list cmb2-list">
-
 					<li>
 						<input type="radio" class="cmb2-option" name="_give_<?php echo $this->id; ?>_checked_default"
 						       id="give_<?php echo $this->id; ?>_checked_default1"
@@ -492,35 +496,48 @@ class Give_ConvertKit {
 			<?php //Field: subscription lists. ?>
 			<div class="give-<?php echo $this->id; ?>-list-container">
 				<label for="give_<?php echo $this->id; ?>_lists"
-				       style="font-weight:bold; float:left;"><?php _e( 'ConvertKit Forms', 'give-convertkit' ); ?></label>
-
-
+				       style="font-weight:bold; float:left;"><?php _e( 'ConvertKit Form', 'give-convertkit' ); ?></label>
 				<button class="give-reset-convertkit-button button button-small"
 				        style="float:left; margin: -2px 0 0 15px;"
 				        data-action="give_reset_convertkit_lists"
-				        data-field_type="checkbox"><?php echo esc_html__( 'Refresh Lists', 'give-convertkit' ); ?></button>
+				        data-field_type="select"><?php echo esc_html__( 'Refresh Forms', 'give-convertkit' ); ?></button>
 				<span class="give-spinner spinner" style="float:left;margin: 0 0 0 10px;"></span>
 
 				<span class="cmb2-metabox-description give-description"
-				      style="margin: 10px 0; clear: both;"><?php _e( 'Customize the lists and/or groups you wish donors to subscribe to.', 'give-convertkit' ); ?></span>
+				      style="margin: 10px 0; clear: both;"><?php _e( 'Customize the form you wish donors to subscribe to.', 'give-convertkit' ); ?></span>
 
-				<div class="give-<?php echo $this->id; ?>-list-wrap">
-
-					<?php
-					$value = (array) get_post_meta( $post->ID, '_give_' . $this->id, true );
-					echo $this->get_list_options( $this->get_lists(), $value, 'checkbox' ); ?>
-
-				</div><!-- give-convertkit-list-wrap -->
+				<div class="give-<?php echo $this->id; ?>-select-wrap">
+					<select id="give_<?php echo $this->id; ?>_lists" name="_give_<?php echo $this->id; ?>"
+					        class="give-<?php echo $this->id; ?>-select">
+						<?php
+						//Select options.
+						echo $this->get_list_options( $this->get_lists(), $list_value, 'select' ); ?>
+					</select>
+				</div> <!-- give-convertkit-select-wrap-->
 			</div> <!-- give-convertkit-list-container -->
 
 			<div class="give-<?php echo $this->id; ?>-tag-container">
 				<?php
+				//Display tags if there are any in users' ConvertKit account.
 				$tags = $this->get_tags();
 				if ( ! empty( $tags ) ) { ?>
-					<p><?php _e( 'Tag Subscribers:', 'give-convertkit' ); ?></p>
-					<div class="give-<?php echo $this->id; ?>-list-wrap">
+					<div class="give-convertkit-tag-label-wrap give-clearfix">
+						<label for="give_<?php echo $this->id; ?>_tags"
+						       style="font-weight:bold; float:left;"><?php _e( 'Tag Subscribers', 'give-convertkit' ); ?></label>
+						<button class="give-reset-tags-convertkit-button button button-small"
+						        style="float:left; margin: -2px 0 0 15px;"
+						        data-action="give_reset_convertkit_tags"
+						        data-field_type="checkbox"><?php echo esc_html__( 'Refresh Tags', 'give-convertkit' ); ?></button>
+						<span class="give-spinner spinner" style="float:left;margin: 0 0 0 10px;"></span>
+
+						<span class="cmb2-metabox-description give-description"
+						      style="margin: 10px 0; clear: both;"><?php _e( 'Customize the tags you wish donors to subscribe to.', 'give-convertkit' ); ?></span>
+
+					</div>
+					<div class="give-<?php echo $this->id; ?>-tag-wrap">
 						<?php
-						$checked = (array) get_post_meta( $post->ID, '_give_' . esc_attr( $this->id ) . '_tags', true );
+						$checked =  get_post_meta( $post->ID, '_give_' . esc_attr( $this->id ) . '_tags', true );
+						$checked = ! empty( $checked ) ? $checked : $this->give_options[ '_give_' . $this->id . '_tags' ];
 						echo $this->get_tag_options( $this->get_tags(), $checked, 'checkbox' ); ?>
 					</div>
 				<?php } ?>
@@ -584,10 +601,9 @@ class Give_ConvertKit {
 		// Sanitize the user input.
 		$give_custom_label      = isset( $_POST[ '_give_' . $this->id . '_custom_label' ] ) ? sanitize_text_field( $_POST[ '_give_' . $this->id . '_custom_label' ] ) : '';
 		$give_custom_lists      = isset( $_POST[ '_give_' . $this->id ] ) ? $_POST[ '_give_' . $this->id ] : $this->give_options[ 'give_' . $this->id . '_list' ];
-		$give_custom_tags       = isset( $_POST[ '_give_' . $this->id ] ) ? $_POST[ '_give_' . $this->id ] : $this->give_options[ 'give_' . $this->id . '_tags' ];
+		$give_custom_tags       = isset( $_POST[ '_give_' . $this->id ] ) ? $_POST[ '_give_' . $this->id . '_tags' ] : $this->give_options[ 'give_' . $this->id . '_tags' ];
 		$give_override_option   = isset( $_POST[ '_give_' . $this->id . '_override_option' ] ) ? esc_html( $_POST[ '_give_' . $this->id . '_override_option' ] ) : '';
 		$give_subscribe_checked = isset( $_POST[ '_give_' . $this->id . '_checked_default' ] ) ? esc_html( $_POST[ '_give_' . $this->id . '_checked_default' ] ) : '';
-
 
 		// Update the meta field.
 		update_post_meta( $post_id, '_give_' . $this->id . '_custom_label', $give_custom_label );
@@ -650,7 +666,7 @@ class Give_ConvertKit {
 
 		if ( ! empty( $this->api_key ) ) {
 
-			$tags = get_transient( 'give_convertkit_tag_data' );
+			$tags = get_transient( 'give_convertkit_tags' );
 
 			if ( false === $tags ) {
 
@@ -660,7 +676,7 @@ class Give_ConvertKit {
 
 					$tags = json_decode( wp_remote_retrieve_body( $request ) );
 
-					set_transient( 'give_convertkit_tag_data', $tags, 24 * 24 * 24 );
+					set_transient( 'give_convertkit_tags', $tags, 24 * 24 * 24 );
 
 				}
 
@@ -723,6 +739,12 @@ class Give_ConvertKit {
 				'type' => 'give_convertkit_list_select',
 			),
 			array(
+				'id'   => '_give_convertkit_tags',
+				'name' => __( 'Choose Tags', 'give-convertkit' ),
+				'desc' => __( 'Select the tags you wish to subscribe donors to by default.', 'give-convertkit' ),
+				'type' => 'give_convertkit_tag_list',
+			),
+			array(
 				'id'      => 'give_convertkit_checked_default',
 				'name'    => __( 'Opt-in Default', 'give-convertkit' ),
 				'desc'    => __( 'Would you like the newsletter opt-in checkbox checked by default? This option can be customized per form.', 'give-convertkit' ),
@@ -763,8 +785,11 @@ class Give_ConvertKit {
 		//Is disabled on the form?
 		if ( $override_option == 'disabled' ) {
 			return false;
-		} elseif ( $global_option == 'disabled' && $override_option == 'default' ) {
-			//Global option disabled?
+		} elseif ( $global_option == 'disabled' && $override_option == 'default'
+		           || $global_option == 'disabled' && empty( $override_option )
+		) {
+			//Global option = disabled and override option = default;
+			// OR global option = disable and override option not present.
 			return false;
 		} else {
 			//Default to true.
@@ -787,7 +812,7 @@ class Give_ConvertKit {
 		ob_start(); ?>
 		<div class="give-convertkit-lists">
 			<label class=""
-			       for="<?php echo "{$field->args['id']}_day"; ?>"><?php _e( '', 'give-convertkit' ); ?></label>
+			       for="<?php echo "{$field->args['id']}"; ?>"><?php _e( '', 'give-convertkit' ); ?></label>
 
 			<select class="cmb2_select give-convertkit-list-select" name="<?php echo "{$field->args['id']}"; ?>"
 			        id="<?php echo "{$field->args['id']}"; ?>">
@@ -800,6 +825,42 @@ class Give_ConvertKit {
 			<span class="give-spinner spinner"></span>
 
 			<p class="cmb2-metabox-description give-description"><?php echo "{$field->args['desc']}"; ?></p>
+
+		</div>
+
+		<?php echo ob_get_clean();
+	}
+
+	/**
+	 * Give add ConvertKit tags select with refresh button.
+	 *
+	 * @param $field
+	 * @param $value
+	 * @param $object_id
+	 * @param $object_type
+	 * @param $field_type CMB2_Types
+	 */
+	public function give_convertkit_tag_list( $field, $value, $object_id, $object_type, $field_type ) {
+
+		ob_start(); ?>
+		<div class="give-convertkit-lists">
+			<label class=""
+			       for="<?php echo "{$field->args['id']}"; ?>"><?php _e( '', 'give-convertkit' ); ?></label>
+
+
+			<div class="give-<?php echo $this->id; ?>-tag-wrap">
+				<?php
+				$checked = give_get_option( "{$field->args['id']}" );
+				echo $this->get_tag_options( $this->get_tags(), $checked, 'checkbox' ); ?>
+			</div>
+
+			<p class="cmb2-metabox-description give-description"><?php echo "{$field->args['desc']}"; ?></p>
+
+			<button class="give-reset-tags-convertkit-button button-secondary" style="margin:3px 0 0 0 !important;"
+			        data-action="give_reset_convertkit_tags"
+			        data-field_type="checklist"><?php esc_html_e( 'Refresh Tags', 'give-convertkit' ); ?></button>
+			<span class="give-spinner spinner"></span>
+
 
 		</div>
 
@@ -865,7 +926,7 @@ class Give_ConvertKit {
 			//Checkboxes.
 			foreach ( $tags as $tag_id => $tag_name ) {
 
-				$options .= '<label class="list"><input type="checkbox" name="_give_' . esc_attr( $this->id ) . '[]"  value="' . esc_attr( $tag_id ) . '" ' . checked( true, in_array( $tag_id, $value ), false ) . '> <span>' . $tag_name . '</span></label>';
+				$options .= '<label class="list"><input type="checkbox" name="_give_' . esc_attr( $this->id ) . '_tags[]"  value="' . esc_attr( $tag_id ) . '" ' . checked( true, in_array( $tag_id, $value ), false ) . '> <span>' . $tag_name . '</span></label>';
 
 			}
 		}
@@ -887,6 +948,31 @@ class Give_ConvertKit {
 			$lists = $this->get_list_options( $this->get_lists(), give_get_option( 'give_convertkit_list' ) );
 		} elseif ( isset( $_POST['post_id'] ) ) {
 			$lists = $this->get_list_options( $this->get_lists(), get_post_meta( $_POST['post_id'], '_give_convertkit', true ), 'checkboxes' );
+		} else {
+			wp_send_json_error();
+		}
+
+		$return = array(
+			'lists' => $lists,
+		);
+
+		wp_send_json_success( $return );
+	}
+
+
+	/**
+	 * AJAX reset ConvertKit lists.
+	 */
+	public function give_reset_convertkit_tags() {
+
+		//Delete transient.
+		delete_transient( 'give_convertkit_tags' );
+		$lists = '';
+
+		if ( isset( $_POST['field_type'] ) && $_POST['field_type'] == 'select' ) {
+			$lists = $this->get_tag_options( $this->get_tags(), give_get_option( 'give_convertkit_tags' ) );
+		} elseif ( isset( $_POST['post_id'] ) ) {
+			$lists = $this->get_tag_options( $this->get_tags(), get_post_meta( $_POST['post_id'], '_give_convertkit_tags', true ), 'checkboxes' );
 		} else {
 			wp_send_json_error();
 		}

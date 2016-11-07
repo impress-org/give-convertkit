@@ -3,21 +3,35 @@
  */
 
 .give-convertkit-list-wrap, .give-convertkit-tag-wrap {
-	border: 1px solid #ccc;
-	background: #FDFDFD;
-	width: auto;
-	height: 200px;
-	overflow-y: scroll;
-	padding: 7px 10px;
+    border: 1px solid #ccc;
+    background: #FDFDFD;
+    width: auto;
+    height: 200px;
+    overflow-y: scroll;
+    padding: 7px 10px;
+    margin: 0;
+    clear: both;
 }
 
 .give-convertkit-list-wrap label, .give-convertkit-tag-wrap label {
-	display: block;
-	margin-bottom: 3px;
+    display: block;
+    margin-bottom: 3px;
 }
 
 .give-convertkit-list-wrap label.group, .give-convertkit-tag-wrap label.group {
-	margin-left: 30px;
-	font-size: 13px;
-	font-style: italic;
+    margin-left: 30px;
+    font-size: 13px;
+    font-style: italic;
+}
+
+.give-convertkit-tag-label-wrap {
+    margin: 10px 0 0;
+}
+
+.give-convertkit-select-wrap  {
+    margin: 0 0 20px;
+}
+
+.give_forms_page_give-settings .give-convertkit-tag-wrap {
+    max-width:350px;
 }
