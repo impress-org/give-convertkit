@@ -401,7 +401,7 @@ class Give_ConvertKit {
 
 		//Form select
 		$list_value = get_post_meta( $post->ID, '_give_' . $this->id, true );
-		$list_value = ! empty( $list_value ) ? $list_value : $this->give_options[ 'give_' . $this->id . '_list' ];
+		$list_value = ! empty( $list_value ) ? $list_value : give_get_option( "give_{$this->id}_list" );
 
 		//Global label
 		$global_label = isset( $this->give_options[ 'give_' . $this->id . '_label' ] ) ? $this->give_options[ 'give_' . $this->id . '_label' ] : __( 'Signup for the newsletter', 'give-convertkit' );;
