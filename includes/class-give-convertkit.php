@@ -619,7 +619,7 @@ class Give_ConvertKit {
 	/**
 	 * Retrieves the lists from ConvertKit
 	 *
-	 * @return mixed
+	 * @return array
 	 */
 	public function get_lists() {
 
@@ -653,7 +653,7 @@ class Give_ConvertKit {
 
 		}
 
-		return $this->lists;
+		return (array) $this->lists;
 
 	}
 
