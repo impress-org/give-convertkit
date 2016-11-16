@@ -196,7 +196,7 @@ class Give_ConvertKit {
 
 		//What's the check gonna be? Should the opt-on be checked or unchecked by default...
 		$form_checked_option   = get_post_meta( $form_id, '_give_' . $this->id . '_checked_default', true );
-		$global_checked_option = $this->give_options[ 'give_' . $this->id . '_checked_default' ];
+		$global_checked_option = give_get_option( "give_{$this->id}_checked_default" );
 		$checked_option        = 'enabled';
 
 		if ( ! empty( $form_checked_option ) && $override_option !== 'default' ) {
@@ -780,7 +780,7 @@ class Give_ConvertKit {
 	public function show_subscribe_checkbox( $form_id ) {
 
 		$override_option = get_post_meta( $form_id, '_give_' . $this->id . '_override_option', true );
-		$global_option   = $this->give_options[ 'give_' . $this->id . '_show_subscribe_checkbox' ];
+		$global_option   = give_get_option( "give_{$this->id}_show_subscribe_checkbox" );
 
 		//Is disabled on the form?
 		if ( $override_option == 'disabled' ) {
