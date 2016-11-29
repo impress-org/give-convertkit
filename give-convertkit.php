@@ -14,6 +14,10 @@ if ( ! defined( 'GIVE_CONVERTKIT_VERSION' ) ) {
 	define( 'GIVE_CONVERTKIT_VERSION', '1.0' );
 }
 
+if ( ! defined( 'GIVE_CONVERTKIT_MIN_GIVE_VERSION' ) ) {
+	define( 'GIVE_CONVERTKIT_MIN_GIVE_VERSION', '1.7' );
+}
+
 if ( ! defined( 'GIVE_CONVERTKIT_PATH' ) ) {
 	define( 'GIVE_CONVERTKIT_PATH', dirname( __FILE__ ) );
 }
@@ -50,6 +54,11 @@ add_action( 'plugins_loaded', 'give_add_convertkit_licensing' );
 function give_convertkit_includes() {
 
 	include( GIVE_CONVERTKIT_PATH . '/includes/give-convertkit-activation.php' );
+
+	if ( ! class_exists( 'Give' ) ) {
+		return false;
+	}
+
 	include( GIVE_CONVERTKIT_PATH . '/includes/class-give-convertkit.php' );
 
 	new Give_ConvertKit( 'convertkit', 'ConvertKit' );
