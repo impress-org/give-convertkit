@@ -3,7 +3,7 @@
  * Plugin Name: Give - ConvertKit
  * Plugin URL: https://givewp.com/addons/convertkit/
  * Description: Easily integrate ConvertKit opt-ins within your Give donation forms.
- * Version: 1.0
+ * Version: 1.0.1
  * Author: WordImpress
  * Author URI: https://wordimpress.com
  * Text Domain: give-convertkit
@@ -11,7 +11,7 @@
 
 //Define constants.
 if ( ! defined( 'GIVE_CONVERTKIT_VERSION' ) ) {
-	define( 'GIVE_CONVERTKIT_VERSION', '1.0' );
+	define( 'GIVE_CONVERTKIT_VERSION', '1.0.1' );
 }
 
 if ( ! defined( 'GIVE_CONVERTKIT_MIN_GIVE_VERSION' ) ) {
