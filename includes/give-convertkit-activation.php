@@ -31,7 +31,7 @@ function give_convertkit_activation_banner() {
 		add_action( 'admin_notices', 'give_convertkit_activation_notice' );
 
 		//Don't let this plugin activate
-		deactivate_plugins( plugin_basename( __FILE__ ) );
+		deactivate_plugins( GIVE_CONVERTKIT_BASENAME );
 
 		if ( isset( $_GET['activate'] ) ) {
 			unset( $_GET['activate'] );
@@ -42,12 +42,12 @@ function give_convertkit_activation_banner() {
 	}
 
 	//Check minimum Give version
-	if ( defined( 'GIVE_VERSION' ) && version_compare( GIVE_VERSION, '1.6', '<' ) ) {
+	if ( defined( 'GIVE_VERSION' ) && version_compare( GIVE_VERSION, GIVE_CONVERTKIT_MIN_GIVE_VERSION, '<' ) ) {
 
 		add_action( 'admin_notices', 'give_convertkit_min_version_notice' );
 
 		//Don't let this plugin activate
-		deactivate_plugins( plugin_basename( __FILE__ ) );
+		deactivate_plugins( GIVE_CONVERTKIT_BASENAME );
 
 		if ( isset( $_GET['activate'] ) ) {
 			unset( $_GET['activate'] );
@@ -68,7 +68,7 @@ function give_convertkit_activation_banner() {
 			include GIVE_PLUGIN_DIR . 'includes/admin/class-addon-activation-banner.php';
 		}
 
-		// Only runs on admin
+		//Only runs on admin
 		$args = array(
 			'file'              => __FILE__,
 			'name'              => esc_html__( 'ConvertKit', 'give-convertkit' ),
@@ -80,7 +80,6 @@ function give_convertkit_activation_banner() {
 		);
 
 		new Give_Addon_Activation_Banner( $args );
-
 	}
 
 	return false;
@@ -95,7 +94,7 @@ add_action( 'admin_init', 'give_convertkit_activation_banner' );
  * @since 1.0
  */
 function give_convertkit_activation_notice() {
-	echo '<div class="error"><p>' . __( '<strong>Activation Error:</strong> We noticed Give is not active. Please activate Give in order to use ConvertKit.', 'give-convertkit' ) . '</p></div>';
+	echo '<div class="error"><p>' . __( '<strong>Activation Error:</strong> You must have the <a href="https://givewp.com/" target="_blank">Give</a> plugin installed and activated for the ConvertKit add-on to activate.', 'give-convertkit' ) . '</p></div>';
 }
 
 /**
@@ -104,7 +103,7 @@ function give_convertkit_activation_notice() {
  * @since 1.0
  */
 function give_convertkit_min_version_notice() {
-	echo '<div class="error"><p>' . __( '<strong>Activation Error:</strong> We noticed Give is not up to date. Please update Give in order to use ConvertKit.', 'give-convertkit' ) . '</p></div>';
+	echo '<div class="error"><p>' . sprintf( __( '<strong>Activation Error:</strong> You must have <a href="%s" target="_blank">Give</a> version %s+ for the ConvertKit add-on to activate.', 'give-convertkit' ), 'https://givewp.com', GIVE_CONVERTKIT_MIN_GIVE_VERSION ) . '</p></div>';
 }
 
 

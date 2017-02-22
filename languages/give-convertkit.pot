@@ -160,22 +160,22 @@ msgstr ""
 msgid "ConvertKit"
 msgstr ""
 
-#: includes/give-convertkit-activation.php:91
-msgid "<strong>Activation Error:</strong> We noticed Give is not active. Please activate Give in order to use ConvertKit."
+#: includes/give-convertkit-activation.php:92
+msgid "<strong>Activation Error:</strong> You must have the <a href=\"https://givewp.com/\" target=\"_blank\">Give</a> plugin installed and activated for the ConvertKit add-on to activate."
 msgstr ""
 
-#: includes/give-convertkit-activation.php:100
-msgid "<strong>Activation Error:</strong> We noticed Give is not up to date. Please update Give in order to use ConvertKit."
+#: includes/give-convertkit-activation.php:101
+msgid "<strong>Activation Error:</strong> You must have <a href=\"%s\" target=\"_blank\">Give</a> version %s+ for the ConvertKit add-on to activate."
 msgstr ""
 
-#: includes/give-convertkit-activation.php:118
+#: includes/give-convertkit-activation.php:119
 msgid "Settings"
 msgstr ""
 
-#: includes/give-convertkit-activation.php:152
+#: includes/give-convertkit-activation.php:153
 msgid "Documentation"
 msgstr ""
 
-#: includes/give-convertkit-activation.php:162
+#: includes/give-convertkit-activation.php:163
 msgid "Add-ons"
 msgstr ""
