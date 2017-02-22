@@ -26,7 +26,7 @@ function give_convertkit_activation_banner() {
 	$is_give_active = defined( 'GIVE_PLUGIN_BASENAME' ) ? is_plugin_active( GIVE_PLUGIN_BASENAME ) : false;
 
 	//Check to see if Give is activated, if it isn't deactivate and show a banner
-	if ( is_admin() && current_user_can( 'activate_plugins' ) && ! $is_give_active ) {
+	if ( current_user_can( 'activate_plugins' ) && ! $is_give_active ) {
 
 		add_action( 'admin_notices', 'give_convertkit_activation_notice' );
 
@@ -57,24 +57,24 @@ function give_convertkit_activation_banner() {
 
 	}
 
-	// Show activation banner.
-	if ( is_admin() ) {
+	// Check for activation banner inclusion.
+	if ( ! class_exists( 'Give_Addon_Activation_Banner' )
+	     && file_exists( GIVE_PLUGIN_DIR . 'includes/admin/class-addon-activation-banner.php' )
+	) {
 
-		// Check for activation banner inclusion.
-		if ( ! class_exists( 'Give_Addon_Activation_Banner' )
-		     && file_exists( GIVE_PLUGIN_DIR . 'includes/admin/class-addon-activation-banner.php' )
-		) {
+		include GIVE_PLUGIN_DIR . 'includes/admin/class-addon-activation-banner.php';
+	}
 
-			include GIVE_PLUGIN_DIR . 'includes/admin/class-addon-activation-banner.php';
-		}
+	// Initialize activation welcome banner.
+	if ( class_exists( 'Give_Addon_Activation_Banner' ) ) {
 
 		//Only runs on admin
 		$args = array(
 			'file'              => __FILE__,
 			'name'              => esc_html__( 'ConvertKit', 'give-convertkit' ),
 			'version'           => GIVE_CONVERTKIT_VERSION,
-			'settings_url'      => admin_url( 'edit.php?post_type=give_forms&page=give-settings&tab=addons' ),
-			'documentation_url' => 'https://givewp.com/documentation/add-ons/convertkit/',
+			'settings_url'      => admin_url( 'edit.php?post_type=give_forms&page=give-settings&tab=addons&section=convertkit-settings' ),
+			'documentation_url' => 'http://docs.givewp.com/addon-convertkit',
 			'support_url'       => 'https://givewp.com/support/',
 			'testing'           => false
 		);
@@ -120,7 +120,7 @@ function give_convertkit_plugin_action_links( $actions ) {
 	$new_actions = array(
 		'settings' => sprintf(
 			'<a href="%1$s">%2$s</a>',
-			admin_url( 'edit.php?post_type=give_forms&page=give-settings&tab=addons' ),
+			admin_url( 'edit.php?post_type=give_forms&page=give-settings&tab=addons&section=convertkit-settings' ),
 			esc_html__( 'Settings', 'give-convertkit' )
 		),
 	);
@@ -153,7 +153,7 @@ function give_convertkit_plugin_row_meta( $plugin_meta, $plugin_file ) {
 					'utm_source'   => 'plugins-page',
 					'utm_medium'   => 'plugin-row',
 					'utm_campaign' => 'admin',
-				), 'https://givewp.com/documentation/add-ons/convertkit/' )
+				), 'http://docs.givewp.com/addon-convertkit' )
 			),
 			esc_html__( 'Documentation', 'give-convertkit' )
 		),
