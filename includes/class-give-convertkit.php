@@ -57,13 +57,13 @@ class Give_ConvertKit {
 		add_action( 'give_donation_form_before_submit', array( $this, 'form_fields' ), 100, 1 );
 		add_action( 'give_insert_payment', array( $this, 'completed_donation_signup' ), 10, 2 );
 
-		//Scripts.
+		// Scripts.
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ), 100 );
 
-		//Donation metabox.
+		// Donation metabox.
 		add_filter( 'give_view_order_details_totals_after', array( $this, 'donation_metabox_notification' ), 10, 1 );
 
-		//Get it started.
+		// Get it started.
 		add_action( 'init', array( $this, 'init' ) );
 
 		// Custom fields.
@@ -109,7 +109,7 @@ class Give_ConvertKit {
 
 		global $post_type;
 
-		//Directories of assets.
+		// Directories of assets.
 		$js_dir  = GIVE_CONVERTKIT_URL . 'assets/js/';
 		$css_dir = GIVE_CONVERTKIT_URL . 'assets/css/';
 
@@ -117,26 +117,25 @@ class Give_ConvertKit {
 		wp_register_style( 'give_' . $this->id . '_admin_css', $css_dir . 'admin-forms.css', GIVE_CONVERTKIT_VERSION );
 		wp_register_script( 'give_' . $this->id . '_admin_forms_scripts', $js_dir . 'admin-forms.js', array( 'jquery' ), GIVE_CONVERTKIT_VERSION, false );
 
-		//Forms CPT Script.
+		// Forms CPT Script.
 		if ( $post_type === 'give_forms' ) {
 
-			//CSS.
+			// CSS.
 			wp_enqueue_style( 'give_' . $this->id . '_admin_css' );
 
-			//JS.
+			// JS.
 			wp_enqueue_script( 'give_' . $this->id . '_admin_forms_scripts' );
 			wp_enqueue_script( 'give_' . $this->id . '_admin_ajax_js' );
 		}
 
-		//Admin settings.
+		// Admin settings.
 		if ( $hook == 'give_forms_page_give-settings' ) {
 
-			//JS/CSS.
+			// JS/CSS.
 			wp_enqueue_script( 'give_' . $this->id . '_admin_ajax_js' );
 			wp_enqueue_style( 'give_' . $this->id . '_admin_css' );
 
 		}
-
 
 	}
 
@@ -177,7 +176,7 @@ class Give_ConvertKit {
 	 */
 	public function form_fields( $form_id ) {
 
-		//Check vars to see if this form should have the Opt-in field.
+		// Check vars to see if this form should have the Opt-in field.
 		if ( ! $this->show_subscribe_checkbox( $form_id ) ) {
 			return;
 		}
@@ -187,20 +186,20 @@ class Give_ConvertKit {
 		$override_option       = get_post_meta( $form_id, '_give_' . $this->id . '_override_option', true );
 		$this->checkbox_label  = __( 'Subscribe to our newsletter', 'give-convertkit' );
 
-		//What's the label gonna be?
+		// What's the label gonna be?
 		if ( ! empty( $custom_checkbox_label ) && $override_option !== 'default' ) {
 			$this->checkbox_label = trim( $custom_checkbox_label );
 		} elseif ( ! empty( $this->give_options[ 'give_' . $this->id . '_label' ] ) ) {
 			$this->checkbox_label = trim( $this->give_options[ 'give_' . $this->id . '_label' ] );
 		}
 
-		//What's the check gonna be? Should the opt-on be checked or unchecked by default...
+		// What's the check gonna be? Should the opt-on be checked or unchecked by default...
 		$form_checked_option   = get_post_meta( $form_id, '_give_' . $this->id . '_checked_default', true );
 		$global_checked_option = give_get_option( "give_{$this->id}_checked_default" );
 		$checked_option        = 'enabled';
 
 		if ( ! empty( $form_checked_option ) && $override_option !== 'default' ) {
-			//Nothing to do here, option already set above.
+			// Nothing to do here, option already set above.
 			$checked_option = $form_checked_option;
 		} elseif ( ! empty( $global_checked_option ) ) {
 			$checked_option = $global_checked_option;
@@ -230,7 +229,7 @@ class Give_ConvertKit {
 	 */
 	public function completed_donation_signup( $payment_id, $payment_data ) {
 
-		//Check to see if the user has elected to subscribe.
+		// Check to see if the user has elected to subscribe.
 		if ( ! isset( $_POST[ 'give_' . $this->id . '_signup' ] ) || $_POST[ 'give_' . $this->id . '_signup' ] !== 'on' ) {
 			return;
 		}
@@ -240,41 +239,41 @@ class Give_ConvertKit {
 		$tags            = (array) get_post_meta( $form_id, '_give_' . $this->id . '_tags', true );
 		$override_option = get_post_meta( $form_id, '_give_' . $this->id . '_override_option', true );
 
-		//Use custom lists from this form?
+		// Use custom lists from this form?
 		if ( $override_option !== 'customize' || empty( $lists ) ) {
-			//Not set so use global list.
+			// Not set so use global list.
 			$lists = array( 0 => give_get_option( 'give_' . $this->id . '_list' ) );
 		}
 
-		//Subscribe Lists if array.
+		// Subscribe Lists if array.
 		if ( is_array( $lists ) ) {
 			$lists = array_unique( $lists );
 			foreach ( $lists as $list ) {
-				//Subscribe the donor to the email lists.
+				// Subscribe the donor to the email lists.
 				$this->subscribe_email( $payment_data['user_info'], $list );
 			}
 		} else {
-			//Subscribe to single.
+			// Subscribe to single.
 			$this->subscribe_email( $payment_data['user_info'], $lists );
 		}
 
-		//Use custom lists from this form?
+		// Use custom lists from this form?
 		if ( $override_option !== 'customize' || empty( $tags ) ) {
-			//Not set so use global tags.
+			// Not set so use global tags.
 			$tags = give_get_option( '_give_' . $this->id . '_tags' );
 		}
 
-		//Subscribe to tags
+		// Subscribe to tags
 		if ( ! empty( $tags ) ) {
-			//Subscribe Tags if array.
+			// Subscribe Tags if array.
 			if ( is_array( $tags ) ) {
 				$tags = array_unique( $tags );
 				foreach ( $tags as $tag ) {
-					//Subscribe the donor to the subscriber tag.
+					// Subscribe the donor to the subscriber tag.
 					$this->subscribe_email( $payment_data['user_info'], false, $tag );
 				}
 			} else {
-				//Subscribe to single tag.
+				// Subscribe to single tag.
 				$this->subscribe_email( $payment_data['user_info'], $tags );
 			}
 		}
@@ -305,17 +304,17 @@ class Give_ConvertKit {
 			}
 		}
 
-		//Setup args.
+		// Setup args.
 		$args = apply_filters( 'give_' . $this->id . '_subscribe_vars', array(
 			'email' => $user_info['email'],
-			'name'  => $user_info['first_name'] . ' ' . $user_info['last_name']
+			'name'  => $user_info['first_name'] . ' ' . $user_info['last_name'],
 		) );
 
 		$return = false;
 
-		//Subscribe to Lists (Forms). Don't subscribe is $tag_id param is false.
+		// Subscribe to Lists (Forms). Don't subscribe is $tag_id param is false.
 		if ( empty( $tag_id ) ) {
-			//Hit the API.
+			// Hit the API.
 			$request = wp_remote_post(
 				'https://api.convertkit.com/v3/forms/' . $list_id . '/subscribe?api_key=' . $this->api_key,
 				array(
@@ -324,15 +323,15 @@ class Give_ConvertKit {
 				)
 			);
 
-			//Success!
+			// Success!
 			if ( ! is_wp_error( $request ) && 200 == wp_remote_retrieve_response_code( $request ) ) {
 				$return = true;
 			}
 		}
 
-		//Subscribe to Tags.
+		// Subscribe to Tags.
 		if ( ! empty( $tag_id ) ) {
-			//Hit the API.
+			// Hit the API.
 			$request = wp_remote_post(
 				'https://api.convertkit.com/v3/tags/' . $tag_id . '/subscribe?api_key=' . $this->api_key,
 				array(
@@ -341,13 +340,11 @@ class Give_ConvertKit {
 				)
 			);
 
-			//Success!
+			// Success!
 			if ( ! is_wp_error( $request ) && 200 == wp_remote_retrieve_response_code( $request ) ) {
-				//@TODO: Write to donation payment notes
+				// @TODO: Write to donation payment notes
 				$return = true;
 			}
-
-
 		}
 
 		return $return;
@@ -396,22 +393,23 @@ class Give_ConvertKit {
 		// Add an nonce field so we can check for it later.
 		wp_nonce_field( 'give_' . $this->id . '_meta_box', 'give_' . $this->id . '_meta_box_nonce' );
 
-		//Using a custom label?
+		// Using a custom label?
 		$custom_label = get_post_meta( $post->ID, '_give_' . $this->id . '_custom_label', true );
 
-		//Form select
+		// Form select
 		$list_value = get_post_meta( $post->ID, '_give_' . $this->id, true );
 		$list_value = ! empty( $list_value ) ? $list_value : give_get_option( "give_{$this->id}_list" );
 
-		//Global label
-		$global_label = isset( $this->give_options[ 'give_' . $this->id . '_label' ] ) ? $this->give_options[ 'give_' . $this->id . '_label' ] : __( 'Signup for the newsletter', 'give-convertkit' );;
+		// Global label
+		$global_label = isset( $this->give_options[ 'give_' . $this->id . '_label' ] ) ? $this->give_options[ 'give_' . $this->id . '_label' ] : __( 'Signup for the newsletter', 'give-convertkit' );
+		;
 
-		//Globally enabled option.
+		// Globally enabled option.
 		$globally_enabled = give_get_option( 'give_' . $this->id . '_show_subscribe_checkbox' );
 		$override_option  = get_post_meta( $post->ID, '_give_' . $this->id . '_override_option', true );
 		$checked_option   = get_post_meta( $post->ID, '_give_' . $this->id . '_checked_default', true );
 
-		//Start the buffer.
+		// Start the buffer.
 		ob_start(); ?>
 
 		<div class="give-<?php echo $this->id; ?>-global-override-wrap">
@@ -458,7 +456,7 @@ class Give_ConvertKit {
 				       placeholder="<?php echo esc_attr( $global_label ); ?>" style="width:100%;"/>
 			</p>
 
-			<?php //Field: Default checked or unchecked option. ?>
+			<?php // Field: Default checked or unchecked option. ?>
 			<div>
 
 				<label for="_give_<?php echo $this->id; ?>_checked_default"
@@ -493,7 +491,7 @@ class Give_ConvertKit {
 
 			</div>
 
-			<?php //Field: subscription lists. ?>
+			<?php // Field: subscription lists. ?>
 			<div class="give-<?php echo $this->id; ?>-list-container">
 				<label for="give_<?php echo $this->id; ?>_lists"
 				       style="font-weight:bold; float:left;"><?php _e( 'ConvertKit Form', 'give-convertkit' ); ?></label>
@@ -510,7 +508,7 @@ class Give_ConvertKit {
 					<select id="give_<?php echo $this->id; ?>_lists" name="_give_<?php echo $this->id; ?>"
 					        class="give-<?php echo $this->id; ?>-select">
 						<?php
-						//Select options.
+						// Select options.
 						echo $this->get_list_options( $this->get_lists(), $list_value, 'select' ); ?>
 					</select>
 				</div> <!-- give-convertkit-select-wrap-->
@@ -518,7 +516,7 @@ class Give_ConvertKit {
 
 			<div class="give-<?php echo $this->id; ?>-tag-container">
 				<?php
-				//Display tags if there are any in users' ConvertKit account.
+				// Display tags if there are any in users' ConvertKit account.
 				$tags = $this->get_tags();
 				if ( ! empty( $tags ) ) { ?>
 					<div class="give-convertkit-tag-label-wrap give-clearfix">
@@ -536,7 +534,7 @@ class Give_ConvertKit {
 					</div>
 					<div class="give-<?php echo $this->id; ?>-tag-wrap">
 						<?php
-						$checked =  get_post_meta( $post->ID, '_give_' . esc_attr( $this->id ) . '_tags', true );
+						$checked = get_post_meta( $post->ID, '_give_' . esc_attr( $this->id ) . '_tags', true );
 						$checked = ! empty( $checked ) ? $checked : $this->give_options[ '_give_' . $this->id . '_tags' ];
 						echo $this->get_tag_options( $this->get_tags(), $checked, 'checkbox' ); ?>
 					</div>
@@ -546,7 +544,7 @@ class Give_ConvertKit {
 		</div>
 		<?php
 
-		//Return the metabox.
+		// Return the metabox.
 		echo ob_get_clean();
 
 	}
@@ -556,7 +554,7 @@ class Give_ConvertKit {
 	 *
 	 * @param int $post_id The ID of the post being saved.
 	 *
-	 * @return void|string
+	 * @return bool|string
 	 */
 	public function save_metabox( $post_id ) {
 
@@ -573,7 +571,6 @@ class Give_ConvertKit {
 
 		// Verify that the nonce is valid.
 		if ( ! wp_verify_nonce( $_POST[ 'give_' . $this->id . '_meta_box_nonce' ], 'give_' . $this->id . '_meta_box' ) ) {
-			return false;
 		}
 
 		// If this is an autosave, our form has not been submitted, so we don't want to do anything.
@@ -587,21 +584,21 @@ class Give_ConvertKit {
 			if ( ! current_user_can( 'edit_give_forms', $post_id ) ) {
 				return $post_id;
 			}
-
 		} else {
 
 			if ( ! current_user_can( 'edit_give_forms', $post_id ) ) {
 				return $post_id;
 			}
-
 		}
 
 		// OK, its safe for us to save the data now.
-
 		// Sanitize the user input.
 		$give_custom_label      = isset( $_POST[ '_give_' . $this->id . '_custom_label' ] ) ? sanitize_text_field( $_POST[ '_give_' . $this->id . '_custom_label' ] ) : '';
 		$give_custom_lists      = isset( $_POST[ '_give_' . $this->id ] ) ? $_POST[ '_give_' . $this->id ] : give_get_option( "give_{$this->id}_list" );
-		$give_custom_tags       = isset( $_POST[ '_give_' . $this->id ] ) ? $_POST[ '_give_' . $this->id . '_tags' ] : $this->give_options[ 'give_' . $this->id . '_tags' ];
+
+		$global_tags = isset( $this->give_options[ 'give_' . $this->id . '_tags' ] ) ? $this->give_options[ 'give_' . $this->id . '_tags' ] : '';
+
+		$give_custom_tags       = isset( $_POST[ '_give_' . $this->id ] ) ? $_POST[ '_give_' . $this->id . '_tags' ] : $global_tags;
 		$give_override_option   = isset( $_POST[ '_give_' . $this->id . '_override_option' ] ) ? esc_html( $_POST[ '_give_' . $this->id . '_override_option' ] ) : '';
 		$give_subscribe_checked = isset( $_POST[ '_give_' . $this->id . '_checked_default' ] ) ? esc_html( $_POST[ '_give_' . $this->id . '_checked_default' ] ) : '';
 
@@ -638,7 +635,6 @@ class Give_ConvertKit {
 					set_transient( 'give_' . $this->id . '_lists', $lists, 24 * 24 * 24 );
 
 				}
-
 			}
 
 			if ( ! empty( $lists ) && ! empty( $lists->forms ) ) {
@@ -648,9 +644,7 @@ class Give_ConvertKit {
 					$this->lists[ $form->id ] = $form->name;
 
 				}
-
 			}
-
 		}
 
 		return (array) $this->lists;
@@ -679,7 +673,6 @@ class Give_ConvertKit {
 					set_transient( 'give_convertkit_tags', $tags, 24 * 24 * 24 );
 
 				}
-
 			}
 
 			if ( ! empty( $tags ) && ! empty( $tags->tags ) ) {
@@ -689,9 +682,7 @@ class Give_ConvertKit {
 					$this->tags[ $tag->id ] = $tag->name;
 
 				}
-
 			}
-
 		}
 
 		return (array) $this->tags;
@@ -712,14 +703,14 @@ class Give_ConvertKit {
 				'name' => __( 'ConvertKit Settings', 'give-convertkit' ),
 				'desc' => '<hr>',
 				'id'   => 'give_title_' . $this->id,
-				'type' => 'give_title'
+				'type' => 'give_title',
 			),
 			array(
 				'id'   => 'give_convertkit_api',
 				'name' => __( 'ConvertKit API Key', 'give-convertkit' ),
 				'desc' => sprintf( __( 'Enter your ConvertKit API key. You may retrieve your ConvertKit API key from your <a href="%s" target="_blank" title="Will open new window">account settings</a>.', 'give-convertkit' ), 'https://app.convertkit.com/account/edit' ),
 				'type' => 'text',
-				'size' => 'regular'
+				'size' => 'regular',
 			),
 			array(
 				'id'      => 'give_convertkit_show_subscribe_checkbox',
@@ -729,8 +720,8 @@ class Give_ConvertKit {
 				'default' => 'enabled',
 				'options' => array(
 					'enabled'  => __( 'Enabled', 'give-convertkit' ),
-					'disabled' => __( 'Disabled', 'give-convertkit' )
-				)
+					'disabled' => __( 'Disabled', 'give-convertkit' ),
+				),
 			),
 			array(
 				'id'   => 'give_convertkit_list',
@@ -753,7 +744,7 @@ class Give_ConvertKit {
 					'disabled' => __( 'Unchecked', 'give-convertkit' ),
 				),
 				'default' => 'enabled',
-				'type'    => 'radio_inline'
+				'type'    => 'radio_inline',
 			),
 			array(
 				'id'         => 'give_convertkit_label',
@@ -764,7 +755,7 @@ class Give_ConvertKit {
 				'attributes' => array(
 					'placeholder' => __( 'Subscribe to our newsletter', 'give-convertkit' ),
 				),
-			)
+			),
 		);
 
 		return array_merge( $settings, $give_convertkit_settings );
@@ -782,17 +773,17 @@ class Give_ConvertKit {
 		$override_option = get_post_meta( $form_id, '_give_' . $this->id . '_override_option', true );
 		$global_option   = give_get_option( "give_{$this->id}_show_subscribe_checkbox" );
 
-		//Is disabled on the form?
+		// Is disabled on the form?
 		if ( $override_option == 'disabled' ) {
 			return false;
 		} elseif ( $global_option == 'disabled' && $override_option == 'default'
 		           || $global_option == 'disabled' && empty( $override_option )
 		) {
-			//Global option = disabled and override option = default;
+			// Global option = disabled and override option = default;
 			// OR global option = disable and override option not present.
 			return false;
 		} else {
-			//Default to true.
+			// Default to true.
 			return true;
 		}
 
@@ -881,14 +872,13 @@ class Give_ConvertKit {
 		$options = '';
 
 		if ( $field_type == 'select' ) {
-			//Select options
+			// Select options
 			foreach ( $lists as $list_id => $list ) {
 				$options .= '<option value="' . $list_id . '"' . selected( $value, $list_id, false ) . '>' . $list . '</option>';
 			}
-
 		} else {
 
-			//Checkboxes.
+			// Checkboxes.
 			foreach ( $lists as $list_id => $list_name ) {
 
 				$options .= '<label class="list"><input type="checkbox" name="_give_' . esc_attr( $this->id ) . '[]"  value="' . esc_attr( $list_id ) . '" ' . checked( true, in_array( $list_id, $value ), false ) . '> <span>' . $list_name . '</span></label>';
@@ -916,14 +906,13 @@ class Give_ConvertKit {
 		$options = '';
 
 		if ( $field_type == 'select' ) {
-			//Select options
+			// Select options
 			foreach ( $tags as $tag_id => $tag_name ) {
 				$options .= '<option value="' . $tag_id . '"' . selected( $value, $tag_id, false ) . '>' . $tag_name . '</option>';
 			}
-
 		} else {
 
-			//Checkboxes.
+			// Checkboxes.
 			foreach ( $tags as $tag_id => $tag_name ) {
 
 				$options .= '<label class="list"><input type="checkbox" name="_give_' . esc_attr( $this->id ) . '_tags[]"  value="' . esc_attr( $tag_id ) . '" ' . checked( true, in_array( $tag_id, $value ), false ) . '> <span>' . $tag_name . '</span></label>';
@@ -940,7 +929,7 @@ class Give_ConvertKit {
 	 */
 	public function give_reset_convertkit_lists() {
 
-		//Delete transient.
+		// Delete transient.
 		delete_transient( 'give_convertkit_lists' );
 		$lists = '';
 
@@ -965,7 +954,7 @@ class Give_ConvertKit {
 	 */
 	public function give_reset_convertkit_tags() {
 
-		//Delete transient.
+		// Delete transient.
 		delete_transient( 'give_convertkit_tags' );
 		$lists = '';
 
