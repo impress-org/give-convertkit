@@ -15,7 +15,7 @@ if ( ! defined( 'GIVE_CONVERTKIT_VERSION' ) ) {
 }
 
 if ( ! defined( 'GIVE_CONVERTKIT_MIN_GIVE_VERSION' ) ) {
-	define( 'GIVE_CONVERTKIT_MIN_GIVE_VERSION', '1.8.2' );
+	define( 'GIVE_CONVERTKIT_MIN_GIVE_VERSION', '2.1.0' );
 }
 
 if ( ! defined( 'GIVE_CONVERTKIT_PATH' ) ) {
