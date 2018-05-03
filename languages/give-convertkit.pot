@@ -1,4 +1,4 @@
-# Copyright (C) 2016 Give - ConvertKit
+# Copyright (C) 2018 Give - ConvertKit
 # This file is distributed under the same license as the Give - ConvertKit package.
 msgid ""
 msgstr ""
@@ -7,7 +7,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
 "Language-Team: WordImpress <info@wordimpress.com>\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -16,166 +16,166 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: includes/class-give-convertkit.php:91, includes/class-give-convertkit.php:407
+#: includes/class-give-convertkit.php:91, includes/class-give-convertkit.php:404
 msgid "Signup for the newsletter"
 msgstr ""
 
-#: includes/class-give-convertkit.php:188, includes/class-give-convertkit.php:765
+#: includes/class-give-convertkit.php:187, includes/class-give-convertkit.php:756
 msgid "Subscribe to our newsletter"
 msgstr ""
 
-#: includes/class-give-convertkit.php:371
+#: includes/class-give-convertkit.php:368
 msgid "Opted-in"
 msgstr ""
 
-#: includes/class-give-convertkit.php:419
+#: includes/class-give-convertkit.php:417
 msgid "ConvertKit Options"
 msgstr ""
 
-#: includes/class-give-convertkit.php:421
+#: includes/class-give-convertkit.php:419
 msgid "Customize the options for this form or use the default global settings."
 msgstr ""
 
-#: includes/class-give-convertkit.php:429, includes/class-give-convertkit.php:475
+#: includes/class-give-convertkit.php:427, includes/class-give-convertkit.php:473
 msgid "Use Default"
 msgstr ""
 
-#: includes/class-give-convertkit.php:437
+#: includes/class-give-convertkit.php:435
 msgid "Customize"
 msgstr ""
 
-#: includes/class-give-convertkit.php:444, includes/class-give-convertkit.php:732
+#: includes/class-give-convertkit.php:442, includes/class-give-convertkit.php:723
 msgid "Disabled"
 msgstr ""
 
-#: includes/class-give-convertkit.php:452
+#: includes/class-give-convertkit.php:450
 msgid "Custom Label"
 msgstr ""
 
-#: includes/class-give-convertkit.php:454
+#: includes/class-give-convertkit.php:452
 msgid "Customize the label for the %1$s opt-in checkbox"
 msgstr ""
 
-#: includes/class-give-convertkit.php:465, includes/class-give-convertkit.php:749
+#: includes/class-give-convertkit.php:463, includes/class-give-convertkit.php:740
 msgid "Opt-in Default"
 msgstr ""
 
-#: includes/class-give-convertkit.php:467
+#: includes/class-give-convertkit.php:465
 msgid "Customize the newsletter opt-in option for this form."
 msgstr ""
 
-#: includes/class-give-convertkit.php:483, includes/class-give-convertkit.php:752
+#: includes/class-give-convertkit.php:481, includes/class-give-convertkit.php:743
 msgid "Checked"
 msgstr ""
 
-#: includes/class-give-convertkit.php:490, includes/class-give-convertkit.php:753
+#: includes/class-give-convertkit.php:488, includes/class-give-convertkit.php:744
 msgid "Unchecked"
 msgstr ""
 
-#: includes/class-give-convertkit.php:499
+#: includes/class-give-convertkit.php:497
 msgid "ConvertKit Form"
 msgstr ""
 
-#: includes/class-give-convertkit.php:503
+#: includes/class-give-convertkit.php:501
 msgid "Refresh Forms"
 msgstr ""
 
-#: includes/class-give-convertkit.php:507
+#: includes/class-give-convertkit.php:505
 msgid "Customize the form you wish donors to subscribe to."
 msgstr ""
 
-#: includes/class-give-convertkit.php:526
+#: includes/class-give-convertkit.php:524
 msgid "Tag Subscribers"
 msgstr ""
 
-#: includes/class-give-convertkit.php:530, includes/class-give-convertkit.php:861
+#: includes/class-give-convertkit.php:528, includes/class-give-convertkit.php:852
 msgid "Refresh Tags"
 msgstr ""
 
-#: includes/class-give-convertkit.php:534
+#: includes/class-give-convertkit.php:532
 msgid "Customize the tags you wish donors to subscribe to."
 msgstr ""
 
-#: includes/class-give-convertkit.php:712
+#: includes/class-give-convertkit.php:703
 msgid "ConvertKit Settings"
 msgstr ""
 
-#: includes/class-give-convertkit.php:719
+#: includes/class-give-convertkit.php:710
 msgid "ConvertKit API Key"
 msgstr ""
 
-#: includes/class-give-convertkit.php:720
+#: includes/class-give-convertkit.php:711
 msgid "Enter your ConvertKit API key. You may retrieve your ConvertKit API key from your <a href=\"%s\" target=\"_blank\" title=\"Will open new window\">account settings</a>."
 msgstr ""
 
-#: includes/class-give-convertkit.php:726
+#: includes/class-give-convertkit.php:717
 msgid "Enable Globally"
 msgstr ""
 
-#: includes/class-give-convertkit.php:727
+#: includes/class-give-convertkit.php:718
 msgid "Allow donors to sign up for the forms selected below on all donation forms? Note: the forms(s) can be customized per form."
 msgstr ""
 
-#: includes/class-give-convertkit.php:731
+#: includes/class-give-convertkit.php:722
 msgid "Enabled"
 msgstr ""
 
-#: includes/class-give-convertkit.php:737
+#: includes/class-give-convertkit.php:728
 msgid "Choose a Form"
 msgstr ""
 
-#: includes/class-give-convertkit.php:738
+#: includes/class-give-convertkit.php:729
 msgid "Select the form you wish to subscribe donors to by default."
 msgstr ""
 
-#: includes/class-give-convertkit.php:743
+#: includes/class-give-convertkit.php:734
 msgid "Choose Tags"
 msgstr ""
 
-#: includes/class-give-convertkit.php:744
+#: includes/class-give-convertkit.php:735
 msgid "Select the tags you wish to subscribe donors to by default."
 msgstr ""
 
-#: includes/class-give-convertkit.php:750
+#: includes/class-give-convertkit.php:741
 msgid "Would you like the newsletter opt-in checkbox checked by default? This option can be customized per form."
 msgstr ""
 
-#: includes/class-give-convertkit.php:760
+#: includes/class-give-convertkit.php:751
 msgid "Default Label"
 msgstr ""
 
-#: includes/class-give-convertkit.php:761
+#: includes/class-give-convertkit.php:752
 msgid "This is the text shown next to the signup option. This can also be customized per form."
 msgstr ""
 
-#: includes/class-give-convertkit.php:815, includes/class-give-convertkit.php:848
+#: includes/class-give-convertkit.php:806, includes/class-give-convertkit.php:839
 msgid ""
 msgstr ""
 
-#: includes/class-give-convertkit.php:824
+#: includes/class-give-convertkit.php:815
 msgid "Refresh Lists"
 msgstr ""
 
-#: includes/give-convertkit-activation.php:69
+#: includes/give-convertkit-activation.php:74
 msgid "ConvertKit"
 msgstr ""
 
-#: includes/give-convertkit-activation.php:92
+#: includes/give-convertkit-activation.php:97
 msgid "<strong>Activation Error:</strong> You must have the <a href=\"https://givewp.com/\" target=\"_blank\">Give</a> plugin installed and activated for the ConvertKit add-on to activate."
 msgstr ""
 
-#: includes/give-convertkit-activation.php:101
+#: includes/give-convertkit-activation.php:106
 msgid "<strong>Activation Error:</strong> You must have <a href=\"%s\" target=\"_blank\">Give</a> version %s+ for the ConvertKit add-on to activate."
 msgstr ""
 
-#: includes/give-convertkit-activation.php:119
+#: includes/give-convertkit-activation.php:124
 msgid "Settings"
 msgstr ""
 
-#: includes/give-convertkit-activation.php:153
+#: includes/give-convertkit-activation.php:158
 msgid "Documentation"
 msgstr ""
 
-#: includes/give-convertkit-activation.php:163
+#: includes/give-convertkit-activation.php:168
 msgid "Add-ons"
 msgstr ""
