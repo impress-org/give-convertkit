@@ -49,7 +49,7 @@ if ( ! class_exists( 'Give_ConvertKit' ) ) {
 		/**
 		 * @since 1.0.3
 		 *
-		 * @var Give_Mollie The reference the singleton instance of this class.
+		 * @var Give_ConvertKit The reference the singleton instance of this class.
 		 */
 		private static $instance;
 
@@ -62,11 +62,14 @@ if ( ! class_exists( 'Give_ConvertKit' ) ) {
 		 */
 		public $notices = array();
 
+		public $id = 'convertkit';
+		public $label = 'ConvertKit';
+
 		/**
 		 * Returns the singleton instance of this class.
 		 *
 		 * @since 1.0.3
-		 * @return Give_Mollie The singleton instance.
+		 * @return Give_ConvertKit The singleton instance.
 		 */
 		public static function get_instance() {
 			if ( null === self::$instance ) {
@@ -78,7 +81,7 @@ if ( ! class_exists( 'Give_ConvertKit' ) ) {
 		}
 
 		/**
-		 * Setup Give Mollie.
+		 * Setup Give ConvertKit.
 		 *
 		 * @since 1.0.3
 		 * @access private
@@ -106,7 +109,7 @@ if ( ! class_exists( 'Give_ConvertKit' ) ) {
 
 			include( GIVE_CONVERTKIT_PATH . '/includes/class-give-convertkit.php' );
 
-			new Give_ConvertKit_Settings( 'convertkit', 'ConvertKit' );
+			new Give_ConvertKit_Settings( $this->id, $this->label );
 
 			$this->licensing();
 			$this->textdomain();
@@ -300,7 +303,7 @@ if ( ! class_exists( 'Give_ConvertKit' ) ) {
 		}
 
 		/**
-		 * Implement Give Licensing for Give Mollie Add On.
+		 * Implement Give Licensing for Give ConvertKit Add On.
 		 *
 		 * @since 1.0.3
 		 * @access private
@@ -354,7 +357,7 @@ if ( ! class_exists( 'Give_ConvertKit' ) ) {
 	 *
 	 * @since 1.0.3
 	 *
-	 * @return Give_Authorize bool|object
+	 * @return Give_ConvertKit bool|object
 	 */
 	function Give_ConvertKit() {
 		return Give_ConvertKit::get_instance();
