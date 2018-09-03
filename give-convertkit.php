@@ -62,7 +62,22 @@ if ( ! class_exists( 'Give_ConvertKit' ) ) {
 		 */
 		public $notices = array();
 
+		/**
+		 * $id (string)
+		 *
+		 * @since 1.0.3
+		 *
+		 * @var array
+		 */
 		public $id = 'convertkit';
+
+		/**
+		 * $label (string)
+		 *
+		 * @since 1.0.3
+		 *
+		 * @var array
+		 */
 		public $label = 'ConvertKit';
 
 		/**
