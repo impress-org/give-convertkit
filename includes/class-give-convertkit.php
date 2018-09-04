@@ -3,9 +3,9 @@
 /**
  * Class Give_ConvertKit
  *
- * @since       1.0
+ * @since 1.0.3
  */
-class Give_ConvertKit {
+class Give_ConvertKit_Settings {
 
 	/**
 	 * The ID for this newsletter Add-on, such as 'convertkit'
@@ -49,16 +49,12 @@ class Give_ConvertKit {
 		$this->give_options = give_get_settings();
 		$this->api_key      = trim( give_get_option( 'give_convertkit_api', '' ) );
 
-		add_action( 'init', array( $this, 'textdomain' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_metabox' ) );
 		add_action( 'save_post', array( $this, 'save_metabox' ) );
 
 		add_filter( 'give_settings_addons', array( $this, 'settings' ) );
 		add_action( 'give_donation_form_before_submit', array( $this, 'form_fields' ), 100, 1 );
 		add_action( 'give_insert_payment', array( $this, 'completed_donation_signup' ), 10, 2 );
-
-		// Scripts.
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ), 100 );
 
 		// Donation metabox.
 		add_filter( 'give_view_donation_details_totals_after', array( $this, 'donation_metabox_notification' ), 10, 1 );
@@ -89,82 +85,6 @@ class Give_ConvertKit {
 			$this->checkbox_label = trim( $this->give_options['give_convertkit_label'] );
 		} else {
 			$this->checkbox_label = __( 'Signup for the newsletter', 'give-convertkit' );
-		}
-
-	}
-
-	/**
-	 * Load Admin Scripts
-	 *
-	 * Enqueues the required admin scripts.
-	 *
-	 * @since 1.0
-	 * @global       $post
-	 *
-	 * @param string $hook Page hook
-	 *
-	 * @return void
-	 */
-	public function admin_scripts( $hook ) {
-
-		global $post_type;
-
-		// Directories of assets.
-		$js_dir  = GIVE_CONVERTKIT_URL . 'assets/js/';
-		$css_dir = GIVE_CONVERTKIT_URL . 'assets/css/';
-
-		wp_register_script( 'give_' . $this->id . '_admin_ajax_js', $js_dir . 'admin-ajax.js', array( 'jquery' ) );
-		wp_register_style( 'give_' . $this->id . '_admin_css', $css_dir . 'admin-forms.css', GIVE_CONVERTKIT_VERSION );
-		wp_register_script( 'give_' . $this->id . '_admin_forms_scripts', $js_dir . 'admin-forms.js', array( 'jquery' ), GIVE_CONVERTKIT_VERSION, false );
-
-		// Forms CPT Script.
-		if ( $post_type === 'give_forms' ) {
-
-			// CSS.
-			wp_enqueue_style( 'give_' . $this->id . '_admin_css' );
-
-			// JS.
-			wp_enqueue_script( 'give_' . $this->id . '_admin_forms_scripts' );
-			wp_enqueue_script( 'give_' . $this->id . '_admin_ajax_js' );
-		}
-
-		// Admin settings.
-		if ( $hook == 'give_forms_page_give-settings' ) {
-
-			// JS/CSS.
-			wp_enqueue_script( 'give_' . $this->id . '_admin_ajax_js' );
-			wp_enqueue_style( 'give_' . $this->id . '_admin_css' );
-
-		}
-
-	}
-
-	/**
-	 * Load the plugin's textdomain
-	 */
-	public function textdomain() {
-
-		// Set filter for language directory.
-		$lang_dir = GIVE_CONVERTKIT_DIR . '/languages/';
-		$lang_dir = apply_filters( 'give_convertkit_languages_directory', $lang_dir );
-
-		// Traditional WordPress plugin locale filter.
-		$locale = apply_filters( 'plugin_locale', get_locale(), 'give-convertkit' );
-		$mofile = sprintf( '%1$s-%2$s.mo', 'give-convertkit', $locale );
-
-		// Setup paths to current locale file.
-		$mofile_local  = $lang_dir . $mofile;
-		$mofile_global = WP_LANG_DIR . '/give-convertkit/' . $mofile;
-
-		if ( file_exists( $mofile_global ) ) {
-			// Look in global /wp-content/languages/give-convertkit/ folder.
-			load_textdomain( 'give-convertkit', $mofile_global );
-		} elseif ( file_exists( $mofile_local ) ) {
-			// Look in local /wp-content/plugins/give-convertkit/languages/ folder.
-			load_textdomain( 'give-convertkit', $mofile_local );
-		} else {
-			// Load the default language files.
-			load_plugin_textdomain( 'give-convertkit', false, $lang_dir );
 		}
 
 	}
@@ -283,7 +203,7 @@ class Give_ConvertKit {
 	/**
 	 * Subscribe an email to a list.
 	 *
-	 * @param array       $user_info
+	 * @param array $user_info
 	 * @param bool|string $list_id
 	 * @param bool|string $tag_id
 	 *
@@ -401,8 +321,7 @@ class Give_ConvertKit {
 		$list_value = ! empty( $list_value ) ? $list_value : give_get_option( "give_{$this->id}_list" );
 
 		// Global label
-		$global_label = isset( $this->give_options[ 'give_' . $this->id . '_label' ] ) ? $this->give_options[ 'give_' . $this->id . '_label' ] : __( 'Signup for the newsletter', 'give-convertkit' );
-		;
+		$global_label = isset( $this->give_options[ 'give_' . $this->id . '_label' ] ) ? $this->give_options[ 'give_' . $this->id . '_label' ] : __( 'Signup for the newsletter', 'give-convertkit' );;
 
 		// Globally enabled option.
 		$globally_enabled = give_get_option( 'give_' . $this->id . '_show_subscribe_checkbox' );
@@ -593,8 +512,8 @@ class Give_ConvertKit {
 
 		// OK, its safe for us to save the data now.
 		// Sanitize the user input.
-		$give_custom_label      = isset( $_POST[ '_give_' . $this->id . '_custom_label' ] ) ? sanitize_text_field( $_POST[ '_give_' . $this->id . '_custom_label' ] ) : '';
-		$give_custom_lists      = isset( $_POST[ '_give_' . $this->id ] ) ? $_POST[ '_give_' . $this->id ] : give_get_option( "give_{$this->id}_list" );
+		$give_custom_label = isset( $_POST[ '_give_' . $this->id . '_custom_label' ] ) ? sanitize_text_field( $_POST[ '_give_' . $this->id . '_custom_label' ] ) : '';
+		$give_custom_lists = isset( $_POST[ '_give_' . $this->id ] ) ? $_POST[ '_give_' . $this->id ] : give_get_option( "give_{$this->id}_list" );
 
 		$global_tags = isset( $this->give_options[ 'give_' . $this->id . '_tags' ] ) ? $this->give_options[ 'give_' . $this->id . '_tags' ] : '';
 
