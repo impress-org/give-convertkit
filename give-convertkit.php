@@ -4,8 +4,8 @@
  * Plugin URI: https://givewp.com/addons/convertkit/
  * Description: Easily integrate ConvertKit opt-ins within your Give donation forms.
  * Version: 1.0.2
- * Author: WordImpress
- * Author URI: https://wordimpress.com
+ * Author: GiveWP
+ * Author URI: https://givewp.com
  * Text Domain: give-convertkit
  */
 

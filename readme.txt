@@ -1,8 +1,8 @@
 === Give - ConvertKit ===
-Contributors: wordimpress
+Contributors: givewp
 Tags: give, convertkit, newsletter, email marketing
-Requires at least: 4.5
-Tested up to: 4.9
+Requires at least: 4.8
+Tested up to: 5.2
 Stable tag: 1.0.2
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -39,7 +39,7 @@ Automatic updates should work like a charm; as always though, ensure you backup 
 * Tweak: Updated deprecated hooks in Give Core 2.1+ - please update to the latest version of Give Core! :)
 
 = 1.0.1 =
-* New: The plugin now checks to see if Give is active and up to the minimum version required to run the plugin - https://github.com/WordImpress/Give-Constant-Contact/issues/4
+* New: The plugin now checks to see if Give is active and up to the minimum version required to run the plugin.
 * Tweak: Plugin updated to use new hooks names found in Give 1.7
 
 = 1.0 =

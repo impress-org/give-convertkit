@@ -3,7 +3,7 @@
  * Give ConvertKit Activation
  *
  * @package     Give
- * @copyright   Copyright (c) 2016, WordImpress
+ * @copyright   Copyright (c) 2016, GiveWP
  * @license     https://opensource.org/licenses/gpl-license GNU Public License
  * @since       1.0
  */

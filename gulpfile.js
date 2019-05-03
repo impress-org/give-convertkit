@@ -20,9 +20,9 @@ gulp.task('pot', function () {
             package: 'Give - ConvertKit',
             domain: 'give-convertkit', //textdomain
             destFile: 'give-convertkit.pot',
-            bugReport: 'https://github.com/WordImpress/Give-ConvertKit',
+            bugReport: 'https://github.com/impress-org/give-convertkit',
             lastTranslator: '',
-            team: 'WordImpress <info@wordimpress.com>'
+            team: 'GiveWP <info@givewp.com>'
         }))
         .pipe(gulp.dest('languages'));
 });
