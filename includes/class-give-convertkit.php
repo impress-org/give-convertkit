@@ -66,9 +66,6 @@ class Give_ConvertKit_Settings {
 		add_action( 'add_meta_boxes', array( $this, 'add_metabox' ) );
 		add_action( 'save_post', array( $this, 'save_metabox' ) );
 		
-		// add_filter( 'give_get_sections_gateways', array( $this, 'register_sections' ) );
-		// add_filter( 'give_get_settings_gateways', array( $this, 'register_settings' ) );		
-		
 		add_filter( 'give_get_sections_addons', array( $this, 'register_sections' ) );
 		add_filter( 'give_get_settings_addons', array( $this, 'register_settings' ) );
 		add_action( 'give_donation_form_before_submit', array( $this, 'form_fields' ), 100, 1 );
@@ -81,14 +78,8 @@ class Give_ConvertKit_Settings {
 		add_action( 'init', array( $this, 'init' ) );
 
 		// Custom fields.
-		// add_action( 'cmb2_render_give_convertkit_list_select', array(
-		// 	$this,
-		// 	'give_convertkit_list_select',
-		// ), 10, 5 );
-		// add_action( 'cmb2_render_give_convertkit_tag_list', array(
-		// 	$this,
-		// 	'give_convertkit_tag_list',
-		// ), 10, 5 );
+		add_action( 'give_admin_field_convertkit_list_select', array( $this, 'convertkit_list_select_field' ), 10, 2 );
+		add_action( 'give_admin_field_convertkit_tag_list', array( $this, 'convertkit_tag_list_field' ), 10, 2 );
 
 		add_action( 'wp_ajax_give_reset_convertkit_lists', array( $this, 'give_reset_convertkit_lists' ) );
 		add_action( 'wp_ajax_give_reset_convertkit_tags', array( $this, 'give_reset_convertkit_tags' ) );
@@ -687,13 +678,13 @@ class Give_ConvertKit_Settings {
 						'id'   => 'give_convertkit_list',
 						'name' => __( 'Choose a Form', 'give-convertkit' ),
 						'desc' => __( 'Select the form you wish to subscribe donors to by default.', 'give-convertkit' ),
-						'type' => 'give_convertkit_list_select',
+						'type' => 'convertkit_list_select',
 					),
 					array(
 						'id'   => '_give_convertkit_tags',
 						'name' => __( 'Choose Tags', 'give-convertkit' ),
 						'desc' => __( 'Select the tags you wish to subscribe donors to by default.', 'give-convertkit' ),
-						'type' => 'give_convertkit_tag_list',
+						'type' => 'convertkit_tag_list',
 					),
 					array(
 						'id'      => 'give_convertkit_checked_default',
@@ -760,32 +751,35 @@ class Give_ConvertKit_Settings {
 	 *
 	 * @param $field
 	 * @param $value
-	 * @param $object_id
-	 * @param $object_type
-	 * @param $field_type CMB2_Types
+	 * 
+	 * @since  1.0.3
+	 * @access public
 	 */
-	public function give_convertkit_list_select( $field, $value, $object_id, $object_type, $field_type ) {
+	public function convertkit_list_select_field( $field, $value ) {
 
-		ob_start(); ?>
-		<div class="give-convertkit-lists">
-			<label class=""
-			       for="<?php echo "{$field->args['id']}"; ?>"><?php _e( '', 'give-convertkit' ); ?></label>
+		ob_start();
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label for="<?php echo esc_attr( $field['id'] ); ?>">
+					<?php echo esc_attr( $field['name'] ); ?>
+				</label>
+			</th>
+			<td scope="row" class="">
+				<select class="give-convertkit-list-select" name="<?php echo "{$field['id']}"; ?>" id="<?php echo "{$field['id']}"; ?>">
+					<?php echo $this->get_list_options( $this->get_lists(), $value ); ?>
+				</select>
 
-			<select class="cmb2_select give-convertkit-list-select" name="<?php echo "{$field->args['id']}"; ?>"
-			        id="<?php echo "{$field->args['id']}"; ?>">
-				<?php echo $this->get_list_options( $this->get_lists(), $value ); ?>
-			</select>
+				<button class="give-reset-convertkit-button button-secondary" style="margin:3px 0 0 2px !important;" data-action="give_reset_convertkit_lists" data-field_type="select">
+					<?php echo esc_html__( 'Refresh Lists', 'give-convertkit' ); ?>
+				</button>
+				<span class="give-spinner spinner"></span>
 
-			<button class="give-reset-convertkit-button button-secondary" style="margin:3px 0 0 2px !important;"
-			        data-action="give_reset_convertkit_lists"
-			        data-field_type="select"><?php echo esc_html__( 'Refresh Lists', 'give-convertkit' ); ?></button>
-			<span class="give-spinner spinner"></span>
-
-			<p class="cmb2-metabox-description give-description"><?php echo "{$field->args['desc']}"; ?></p>
-
-		</div>
-
-		<?php echo ob_get_clean();
+				<p class="give-description"><?php echo "{$field['desc']}"; ?></p>
+			</td>
+		</tr>
+		<?php
+		echo ob_get_clean();
 	}
 
 	/**
@@ -793,35 +787,37 @@ class Give_ConvertKit_Settings {
 	 *
 	 * @param $field
 	 * @param $value
-	 * @param $object_id
-	 * @param $object_type
-	 * @param $field_type CMB2_Types
+	 * 
+	 * @since  1.0.3
+	 * @access public
 	 */
-	public function give_convertkit_tag_list( $field, $value, $object_id, $object_type, $field_type ) {
+	public function convertkit_tag_list_field( $field, $value ) {
 
-		ob_start(); ?>
-		<div class="give-convertkit-lists">
-			<label class=""
-			       for="<?php echo "{$field->args['id']}"; ?>"><?php _e( '', 'give-convertkit' ); ?></label>
+		ob_start(); 
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label for="<?php echo esc_attr( $field['id'] ); ?>">
+					<?php echo esc_attr( $field['name'] ); ?>
+				</label>
+			</th>
+			<td scope="row" class="">
+				<div class="give-<?php echo $this->id; ?>-tag-wrap">
+					<?php
+					$checked = give_get_option( "{$field['id']}" );
+					echo $this->get_tag_options( $this->get_tags(), $checked, 'checkbox' ); ?>
+				</div>
 
+				<p class="give-description"><?php echo "{$field['desc']}"; ?></p>
 
-			<div class="give-<?php echo $this->id; ?>-tag-wrap">
-				<?php
-				$checked = give_get_option( "{$field->args['id']}" );
-				echo $this->get_tag_options( $this->get_tags(), $checked, 'checkbox' ); ?>
-			</div>
-
-			<p class="cmb2-metabox-description give-description"><?php echo "{$field->args['desc']}"; ?></p>
-
-			<button class="give-reset-tags-convertkit-button button-secondary" style="margin:3px 0 0 0 !important;"
-			        data-action="give_reset_convertkit_tags"
-			        data-field_type="checklist"><?php esc_html_e( 'Refresh Tags', 'give-convertkit' ); ?></button>
-			<span class="give-spinner spinner"></span>
-
-
-		</div>
-
-		<?php echo ob_get_clean();
+				<button class="give-reset-tags-convertkit-button button-secondary" style="margin:3px 0 0 0 !important;"
+						data-action="give_reset_convertkit_tags"
+						data-field_type="checklist"><?php esc_html_e( 'Refresh Tags', 'give-convertkit' ); ?></button>
+				<span class="give-spinner spinner"></span>
+			</td>
+		</tr>
+		<?php
+		echo ob_get_clean();
 	}
 
 	/**
