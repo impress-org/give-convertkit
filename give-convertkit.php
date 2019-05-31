@@ -3,7 +3,7 @@
  * Plugin Name: Give - ConvertKit
  * Plugin URI: https://givewp.com/addons/convertkit/
  * Description: Easily integrate ConvertKit opt-ins within your Give donation forms.
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: GiveWP
  * Author URI: https://givewp.com
  * Text Domain: give-convertkit
@@ -11,7 +11,7 @@
 
 //Define constants.
 if ( ! defined( 'GIVE_CONVERTKIT_VERSION' ) ) {
-	define( 'GIVE_CONVERTKIT_VERSION', '1.0.2' );
+	define( 'GIVE_CONVERTKIT_VERSION', '1.0.3' );
 }
 
 if ( ! defined( 'GIVE_CONVERTKIT_MIN_GIVE_VERSION' ) ) {

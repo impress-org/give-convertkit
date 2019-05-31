@@ -3,7 +3,7 @@ Contributors: givewp
 Tags: give, convertkit, newsletter, email marketing
 Requires at least: 4.8
 Tested up to: 5.2
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
 
