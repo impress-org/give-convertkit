@@ -18,7 +18,7 @@ This plugin requires the Give plugin activated to function properly. When activa
 
 = Minimum Requirements =
 
-* WordPress 4.5 or greater
+* WordPress 4.8 or greater
 * PHP version 5.3 or greater
 * MySQL version 5.0 or greater
 
@@ -35,6 +35,9 @@ The manual installation method involves downloading our donation plugin and uplo
 Automatic updates should work like a charm; as always though, ensure you backup your site just in case.
 
 == Changelog ==
+
+= 1.0.3: July 11th, 2019 =
+* Tweak: Removed deprecated hooks for added compatibility for Give Core 2.5.0+. Note: Please ensure you are using the latest version of Give Core prior to updating.
 
 = 1.0.2: May 3rd, 2018 =
 * Tweak: Updated deprecated hooks in Give Core 2.1+ - please update to the latest version of Give Core! :)
