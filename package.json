@@ -2,7 +2,7 @@
   "name": "give-constant-contact",
   "private": true,
   "devDependencies": {
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-sort": "^2.0.0",
     "gulp-wp-pot": "^1.2.2",
     "gulp-checktextdomain": "^1.0.2",
