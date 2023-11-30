@@ -2,6 +2,8 @@
 
 namespace GiveConvertKit\ConvertKitAPI;
 
+use Give\Log\Log;
+
 /**
  * @unreleased
  */
@@ -72,9 +74,21 @@ class API
      */
     protected function subscribe($entity, $id, Subscriber $subscriber): void
     {
-        wp_remote_post(
+        $response = wp_remote_post(
             "https://api.convertkit.com/v3/$entity/$id/subscribe?api_key={$this->apiKey}",
-            ['body' => $subscriber->toArray(), 'timeout' => 30, 'blocking' => false]
+            ['body' => $subscriber->toArray(), 'timeout' => 30]
         );
+
+        if (is_wp_error($response)) {
+            Log::error(__('Error subscribing to ConvertKit', 'give-convertkit'), [
+                'error' => $response->get_error_message(),
+                'subscriber' => $subscriber->toArray(),
+            ]);
+        } elseif(!in_array(wp_remote_retrieve_response_code( $response ), [200, 201])) {
+            Log::error(__('Error subscribing to ConvertKit', 'give-convertkit'), [
+                'error' => wp_remote_retrieve_body( $response ),
+                'subscriber' => $subscriber->toArray(),
+            ]);
+        }
     }
 }
