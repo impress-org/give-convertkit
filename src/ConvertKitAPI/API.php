@@ -74,7 +74,7 @@ class API
     {
         wp_remote_post(
             "https://api.convertkit.com/v3/$entity/$id/subscribe?api_key={$this->apiKey}",
-            ['body' => $subscriber->toArray(), 'timeout' => 30]
+            ['body' => $subscriber->toArray(), 'timeout' => 30, 'blocking' => false]
         );
     }
 }
