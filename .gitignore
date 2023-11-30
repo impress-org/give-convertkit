@@ -2,5 +2,11 @@
 .idea
 .svn
 
-# Gulp / Grunt
-/node_modules
+# NPM
+node_modules
+
+# Composer
+vendor
+
+# WP Scripts
+build
