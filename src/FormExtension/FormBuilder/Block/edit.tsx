@@ -3,14 +3,12 @@ import {BlockEditProps} from '@wordpress/blocks';
 import {InspectorControls} from '@wordpress/block-editor';
 import {PanelBody, CheckboxControl, SelectControl, TextControl, ToggleControl} from '@wordpress/components';
 
-declare global {
-    interface Window {
+declare const window {
         GiveConvertKit: {
             forms?: Array<{ id: string; name: string }>,
             tags?: Array<{ id: string; name: string }>,
         }
-    }
-}
+} & Window
 
 const formsListOptions = window.GiveConvertKit.forms.map(function(form) {
     return { value: form.id, label: form.name };
