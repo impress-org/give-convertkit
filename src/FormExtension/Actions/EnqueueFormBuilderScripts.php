@@ -44,6 +44,5 @@ class EnqueueFormBuilderScripts
             'forms' => $convertkit->getForms(),
             'tags' => $convertkit->getTags(),
         ]);
-//        wp_enqueue_style('givewp-form-extension-convertkit', $this->styleSrc);
     }
 }

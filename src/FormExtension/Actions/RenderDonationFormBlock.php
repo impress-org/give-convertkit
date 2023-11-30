@@ -24,8 +24,8 @@ class RenderDonationFormBlock
     {
         return ConvertKitField::make('convertkit')
             ->label((string)$block->getAttribute('label'))
+            ->checked((bool)$block->getAttribute('defaultChecked'))
             ->selectedForm((string)$block->getAttribute('selectedForm'))
-            ->defaultChecked((bool)$block->getAttribute('defaultChecked'))
             ->tagSubscribers((array)$block->getAttribute('tagSubscribers'))
             ->scope(function(ConvertKitField $field, $value, Donation $donation) {
 

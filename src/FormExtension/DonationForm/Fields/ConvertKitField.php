@@ -2,33 +2,15 @@
 
 namespace GiveConvertKit\FormExtension\DonationForm\Fields;
 
+use Give\Framework\FieldsAPI\Checkbox;
 use Give\Framework\FieldsAPI\Field;
 
-class ConvertKitField extends Field
+class ConvertKitField extends Checkbox
 {
-    protected $label;
     protected $selectedForm;
-    protected $defaultChecked;
     protected $tagSubscribers;
 
     public const TYPE = 'convertkit';
-
-    /**
-     * @unreleased
-     */
-    public function label(string $label): ConvertKitField
-    {
-        $this->label = $label;
-        return $this;
-    }
-
-    /**
-     * @unreleased
-     */
-    public function getLabel(): string
-    {
-        return $this->label;
-    }
 
     /**
      * @unreleased
@@ -46,24 +28,6 @@ class ConvertKitField extends Field
     {
         return $this->selectedForm;
     }
-
-    /**
-     * @unreleased
-     */
-    public function defaultChecked(bool $defaultChecked): ConvertKitField
-    {
-        $this->defaultChecked = $defaultChecked;
-        return $this;
-    }
-
-    /**
-     * @unreleased
-     */
-    public function getDefaultChecked(): bool
-    {
-        return $this->defaultChecked;
-    }
-
 
     /**
      * @unreleased

@@ -29,7 +29,7 @@ export default function Edit({attributes, setAttributes}: BlockEditProps<any>) {
             </div>
             <InspectorControls>
                 <PanelBody title={__('Field Settings', 'give-convertkit')} initialOpen={true}>
-                    <div className={'givewp-mailchimp-controls'}>
+                    <div className={'givewp-convertkit-controls'}>
                         <TextControl
                             label={__('Custom Label', 'give-convertkit')}
                             value={label}

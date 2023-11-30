@@ -2,35 +2,59 @@
 
 namespace GiveConvertKit\ConvertKitAPI;
 
+/**
+ * @unreleased
+ */
 class API
 {
+    /**
+     * @unreleased
+     */
     protected $apiKey;
 
+    /**
+     * @unreleased
+     */
     public function __construct($apiKey)
     {
         $this->apiKey = $apiKey;
     }
 
+    /**
+     * @unreleased
+     */
     public function getForms(): array
     {
         return $this->get('forms');
     }
 
+    /**
+     * @unreleased
+     */
     public function getTags(): array
     {
         return $this->get('tags');
     }
 
+    /**
+     * @unreleased
+     */
     public function subscribeToFormList($id, Subscriber $subscriber)
     {
         $this->subscribe('forms', $id, $subscriber);
     }
 
+    /**
+     * @unreleased
+     */
     public function subscriberToTag($id, Subscriber $subscriber)
     {
         $this->subscribe('tags', $id, $subscriber);
     }
 
+    /**
+     * @unreleased
+     */
     protected function get($entity): array
     {
         $response = wp_remote_get("https://api.convertkit.com/v3/$entity?api_key={$this->apiKey}");
@@ -43,6 +67,9 @@ class API
         }, $list[$entity]);
     }
 
+    /**
+     * @unreleased
+     */
     protected function subscribe($entity, $id, Subscriber $subscriber): void
     {
         wp_remote_post(
