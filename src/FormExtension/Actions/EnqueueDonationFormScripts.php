@@ -41,6 +41,6 @@ class EnqueueDonationFormScripts
     public function __invoke()
     {
         wp_enqueue_script('givewp-form-extension-convertkit', $this->scriptSrc, $this->scriptAsset['dependencies']);
-        wp_enqueue_style('givewp-form-extension-mailchimp', $this->styleSrc);
+        wp_enqueue_style('givewp-form-extension-convertkit', $this->styleSrc);
     }
 }
