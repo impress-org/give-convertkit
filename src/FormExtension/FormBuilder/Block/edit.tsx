@@ -3,7 +3,7 @@ import {BlockEditProps} from '@wordpress/blocks';
 import {InspectorControls} from '@wordpress/block-editor';
 import {PanelBody, CheckboxControl, SelectControl, TextControl, ToggleControl} from '@wordpress/components';
 
-declare const window {
+declare const window: {
         GiveConvertKit: {
             forms?: Array<{ id: string; name: string }>,
             tags?: Array<{ id: string; name: string }>,
