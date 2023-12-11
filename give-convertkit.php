@@ -80,6 +80,15 @@ if ( ! class_exists( 'Give_ConvertKit' ) ) {
 		 */
 		public $label = 'ConvertKit';
 
+        /**
+         * @unreleased
+         * @var array
+         */
+        private $serviceProviders = [
+            \GiveConvertKit\ConvertKitAPI\ServiceProvider::class,
+            \GiveConvertKit\FormExtension\ServiceProvider::class,
+        ];
+
 		/**
 		 * Returns the singleton instance of this class.
 		 *
@@ -98,16 +107,36 @@ if ( ! class_exists( 'Give_ConvertKit' ) ) {
 		/**
 		 * Setup Give ConvertKit.
 		 *
+         * @unreleased register service providers
 		 * @since 1.0.3
 		 * @access private
 		 */
 		public function setup() {
+
+            // Load service providers.
+            add_action('before_give_init', [$this, 'registerServiceProviders']);
 
 			// Give init hook.
 			add_action( 'give_init', array( $this, 'init' ), 10 );
 			add_action( 'admin_init', array( $this, 'check_environment' ), 999 );
 			add_action( 'admin_notices', array( $this, 'admin_notices' ), 15 );
 		}
+
+        /**
+         * Register service providers
+         *
+         * @unreleased
+         */
+        public function registerServiceProviders()
+        {
+            if ( ! $this->get_environment_warning() ) {
+                return;
+            }
+
+            foreach ($this->serviceProviders as $className) {
+                give()->registerServiceProvider($className);
+            }
+        }
 
 		/**
 		 * Init the plugin after plugins_loaded so environment variables are set.
@@ -379,4 +408,6 @@ if ( ! class_exists( 'Give_ConvertKit' ) ) {
 	}
 
 	Give_ConvertKit();
+
+    require_once GIVE_CONVERTKIT_DIR . 'vendor/autoload.php';
 }
