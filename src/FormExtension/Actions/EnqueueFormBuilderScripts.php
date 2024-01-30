@@ -43,8 +43,9 @@ class EnqueueFormBuilderScripts
         
         wp_enqueue_script('givewp-form-extension-convertkit', $this->scriptSrc, $this->scriptAsset['dependencies']);
         wp_localize_script('givewp-form-extension-convertkit', 'GiveConvertKit', [
-            'forms' => $convertkit->getForms(),
-            'tags'  => $convertkit->getTags(),
+            'isConfigured' => $convertkit->validateApiKey(),
+            'forms'        => $convertkit->getForms(),
+            'tags'         => $convertkit->getTags(),
         ]);
     }
 }
