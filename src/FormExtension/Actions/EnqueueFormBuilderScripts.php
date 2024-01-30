@@ -2,6 +2,8 @@
 
 namespace GiveConvertKit\FormExtension\Actions;
 
+use GiveConvertKit\ConvertKitAPI\API;
+
 class EnqueueFormBuilderScripts
 {
     /**
@@ -9,19 +11,19 @@ class EnqueueFormBuilderScripts
      * @var string
      */
     protected $styleSrc;
-
+    
     /**
      * @unreleased
      * @var string
      */
     protected $scriptSrc;
-
+    
     /**
      * @unreleased
      * @var array
      */
     protected $scriptAsset;
-
+    
     /**
      * @unreleased
      */
@@ -31,18 +33,18 @@ class EnqueueFormBuilderScripts
         $this->scriptSrc = GIVE_CONVERTKIT_URL . 'build/FormBuilder.js';
         $this->scriptAsset = require GIVE_CONVERTKIT_DIR . 'build/FormBuilder.asset.php';
     }
-
+    
     /**
      * @unreleased
      */
     public function __invoke()
     {
-        $convertkit = give(\GiveConvertKit\ConvertKitAPI\API::class);
-
+        $convertkit = give(API::class);
+        
         wp_enqueue_script('givewp-form-extension-convertkit', $this->scriptSrc, $this->scriptAsset['dependencies']);
         wp_localize_script('givewp-form-extension-convertkit', 'GiveConvertKit', [
             'forms' => $convertkit->getForms(),
-            'tags' => $convertkit->getTags(),
+            'tags'  => $convertkit->getTags(),
         ]);
     }
 }
