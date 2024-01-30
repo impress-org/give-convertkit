@@ -2,6 +2,7 @@
 
 namespace GiveConvertKit\ConvertKitAPI;
 
+use Give\Framework\Exceptions\Primitives\Exception;
 use Give\Log\Log;
 
 /**
@@ -13,7 +14,7 @@ class API
      * @unreleased
      */
     protected $apiKey;
-
+    
     /**
      * @unreleased
      */
@@ -21,7 +22,35 @@ class API
     {
         $this->apiKey = $apiKey;
     }
-
+    
+    /**
+     * @unreleased
+     */
+    public function validateApiKey(): bool
+    {
+        try {
+            $statusCode = absint(wp_remote_retrieve_response_code($this->getAccount()));
+            
+            return $statusCode === 200;
+        } catch (Exception $e) {
+            Log::error('CONVERTKIT API ERROR', [
+                'Invalid api key' => 'Please provide a valid ConvertKit API key.',
+                'Error message'   => $e->getMessage(),
+            ]);
+            
+            return false;
+        }
+    }
+    
+    
+    /**
+     * @unreleased
+     */
+    public function getAccount()
+    {
+        return wp_remote_get("https://api.convertkit.com/v3/account?api_key={$this->apiKey}");
+    }
+    
     /**
      * @unreleased
      */
@@ -29,7 +58,7 @@ class API
     {
         return $this->get('forms');
     }
-
+    
     /**
      * @unreleased
      */
@@ -37,7 +66,7 @@ class API
     {
         return $this->get('tags');
     }
-
+    
     /**
      * @unreleased
      */
@@ -45,7 +74,7 @@ class API
     {
         $this->subscribe('forms', $id, $subscriber);
     }
-
+    
     /**
      * @unreleased
      */
@@ -53,22 +82,27 @@ class API
     {
         $this->subscribe('tags', $id, $subscriber);
     }
-
+    
     /**
      * @unreleased
      */
     protected function get($entity): array
     {
-        $response = wp_remote_get("https://api.convertkit.com/v3/$entity?api_key={$this->apiKey}");
-        $list = json_decode( wp_remote_retrieve_body( $response ), true );
-        return array_map(function($item) {
-            return [
-                'id' => $item['id'],
-                'name' => $item['name'],
-            ];
-        }, $list[$entity]);
+        if ($this->validateApiKey()) {
+            $response = wp_remote_get("https://api.convertkit.com/v3/$entity?api_key={$this->apiKey}");
+            $list = json_decode(wp_remote_retrieve_body($response), true);
+            
+            return array_map(function ($item) {
+                return [
+                    'id'   => $item['id'],
+                    'name' => $item['name'],
+                ];
+            }, $list[$entity]);
+        }
+        
+        return [];
     }
-
+    
     /**
      * @unreleased
      */
@@ -78,15 +112,15 @@ class API
             "https://api.convertkit.com/v3/$entity/$id/subscribe?api_key={$this->apiKey}",
             ['body' => $subscriber->toArray(), 'timeout' => 30]
         );
-
+        
         if (is_wp_error($response)) {
             Log::error(__('Error subscribing to ConvertKit', 'give-convertkit'), [
-                'error' => $response->get_error_message(),
+                'error'      => $response->get_error_message(),
                 'subscriber' => $subscriber->toArray(),
             ]);
-        } elseif(!in_array(wp_remote_retrieve_response_code( $response ), [200, 201])) {
+        } elseif ( ! in_array(wp_remote_retrieve_response_code($response), [200, 201])) {
             Log::error(__('Error subscribing to ConvertKit', 'give-convertkit'), [
-                'error' => wp_remote_retrieve_body( $response ),
+                'error'      => wp_remote_retrieve_body($response),
                 'subscriber' => $subscriber->toArray(),
             ]);
         }
