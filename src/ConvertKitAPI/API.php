@@ -36,9 +36,6 @@ class API
     {
         try {
             $statusCode = absint(wp_remote_retrieve_response_code($this->getAccount()));
-            Log::error('CONVERTKIT API status', [
-                'code' => $statusCode,
-            ]);
             
             return $statusCode === 200 && $this->apiKey;
         } catch (Exception $e) {
