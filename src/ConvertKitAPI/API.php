@@ -18,20 +18,29 @@ class API
     /**
      * @unreleased
      */
-    public function __construct($apiKey)
+    protected $apiSecret;
+    
+    /**
+     * @unreleased
+     */
+    public function __construct($apiKey, $apiSecret)
     {
         $this->apiKey = $apiKey;
+        $this->apiSecret = $apiSecret;
     }
     
     /**
      * @unreleased
      */
-    public function validateApiKey(): bool
+    public function validateApiCredentials(): bool
     {
         try {
             $statusCode = absint(wp_remote_retrieve_response_code($this->getAccount()));
+            Log::error('CONVERTKIT API status', [
+                'code' => $statusCode,
+            ]);
             
-            return $statusCode === 200;
+            return $statusCode === 200 && $this->apiKey;
         } catch (Exception $e) {
             Log::error('CONVERTKIT API ERROR', [
                 'Invalid api key' => 'Please provide a valid ConvertKit API key.',
@@ -48,7 +57,7 @@ class API
      */
     public function getAccount()
     {
-        return wp_remote_get("https://api.convertkit.com/v3/account?api_key={$this->apiKey}");
+        return wp_remote_get("https://api.convertkit.com/v3/account?api_secret={$this->apiSecret}");
     }
     
     /**
@@ -88,7 +97,7 @@ class API
      */
     protected function get($entity): array
     {
-        if ($this->validateApiKey()) {
+        if ($this->validateApiCredentials()) {
             $response = wp_remote_get("https://api.convertkit.com/v3/$entity?api_key={$this->apiKey}");
             $list = json_decode(wp_remote_retrieve_body($response), true);
             
