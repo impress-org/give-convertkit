@@ -18,7 +18,7 @@ class AddBlockToNewForms
     {
         $convertkit = give(API::class);
         
-        if ($this->isEnabledGlobally() && $convertkit->validateApiKey()) {
+        if ($this->isEnabledGlobally() && $convertkit->validateApiCredentials()) {
             $form->blocks->insertAfter(
                 'givewp/email',
                 BlockModel::make([

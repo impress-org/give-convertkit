@@ -25,7 +25,7 @@ class RenderDonationFormBlock
     {
         $convertkit = give(API::class);
         
-        if ($convertkit->validateApiKey()) {
+        if ($convertkit->validateApiCredentials()) {
             return ConvertKitField::make('convertkit')
                 ->label((string)$block->getAttribute('label'))
                 ->checked((bool)$block->getAttribute('defaultChecked'))
