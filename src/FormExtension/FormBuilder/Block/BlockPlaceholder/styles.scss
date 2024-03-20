@@ -1,0 +1,29 @@
+.givewp-mailchimp-block-placeholder {
+	background-color: var(--givewp-gray-10);
+	border: 1px solid var(--wp-admin-theme-color);
+	border-radius: 5px;
+	padding: var(--givewp-spacing-3) var(--givewp-spacing-6);
+
+	label,
+	.label {
+		color: var(--givewp-gray-900);
+		font-size: 1rem;
+		font-weight: 500;
+		line-height: 1.5;
+	}
+
+	&--invalid {
+		background: none;
+		border: 1px dashed var(--givewp-grey-500);
+		box-shadow: 0 2px 4px 0 #ebebeb;
+		border-radius: 0.3125rem;
+		padding: var(--givewp-spacing-6) var(--givewp-spacing-4);
+		font-size: 14px;
+
+		a {
+			color: var(--givewp-grey-900);
+			font-weight: 600;
+			cursor: pointer
+		}
+	}
+}
