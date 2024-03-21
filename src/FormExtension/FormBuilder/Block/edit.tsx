@@ -9,7 +9,7 @@ import {
 } from "@wordpress/components";
 import BlockPlaceholder from "./BlockPlaceholder";
 import { getWindowData } from "./window";
-import BlockNotice from "./BlockNotice";
+import { BlockNotice } from "@givewp/form-builder-library";
 
 const { forms, tags } = getWindowData();
 const formsListOptions = forms.map(function ({ id, name }) {
