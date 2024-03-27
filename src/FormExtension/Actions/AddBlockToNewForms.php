@@ -17,7 +17,7 @@ class AddBlockToNewForms
     public function __invoke(DonationForm $form)
     {
         $convertkit = give(API::class);
-        
+
         if ($this->isEnabledGlobally() && $convertkit->validateApiCredentials()) {
             $form->blocks->insertAfter(
                 'givewp/email',
@@ -33,7 +33,7 @@ class AddBlockToNewForms
             );
         }
     }
-    
+
     /**
      * @unreleased
      */
@@ -41,7 +41,7 @@ class AddBlockToNewForms
     {
         return give_is_setting_enabled(give_get_option('give_convertkit_show_subscribe_checkbox'));
     }
-    
+
     /**
      * @unreleased
      */
@@ -49,7 +49,7 @@ class AddBlockToNewForms
     {
         return give_get_option('give_convertkit_label');
     }
-    
+
     /**
      * @unreleased
      */
@@ -57,7 +57,7 @@ class AddBlockToNewForms
     {
         return give_is_setting_enabled(give_get_option('give_convertkit_checked_default'));
     }
-    
+
     /**
      * @unreleased
      */
@@ -65,7 +65,7 @@ class AddBlockToNewForms
     {
         return give_get_option('give_convertkit_list');
     }
-    
+
     /**
      * @unreleased
      */
