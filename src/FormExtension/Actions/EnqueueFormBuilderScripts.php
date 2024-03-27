@@ -44,7 +44,7 @@ class EnqueueFormBuilderScripts
         wp_enqueue_script('givewp-form-extension-convertkit', $this->scriptSrc, $this->scriptAsset['dependencies']);
         wp_localize_script('givewp-form-extension-convertkit', 'GiveConvertKit', [
             'requiresSetup' => ! $convertkit->validateApiCredentials(),
-            'settingsUrl'   => '/wp-admin/edit.php?post_type=give_forms&page=give-settings&tab=addons',
+            'settingsUrl'   => admin_url('edit.php?post_type=give_forms&page=give-settings&tab=addons'),
             'forms'         => $convertkit->getForms(),
             'tags'          => $convertkit->getTags(),
         ]);
