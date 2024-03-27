@@ -14,12 +14,12 @@ class API
      * @unreleased
      */
     protected $apiKey;
-    
+
     /**
      * @unreleased
      */
     protected $apiSecret;
-    
+
     /**
      * @unreleased
      */
@@ -28,7 +28,7 @@ class API
         $this->apiKey = $apiKey;
         $this->apiSecret = $apiSecret;
     }
-    
+
     /**
      * @unreleased
      */
@@ -36,19 +36,18 @@ class API
     {
         try {
             $statusCode = absint(wp_remote_retrieve_response_code($this->getAccount()));
-            
+
             return $statusCode === 200 && $this->apiKey;
         } catch (Exception $e) {
             Log::error('CONVERTKIT API ERROR', [
                 'Invalid api key' => 'Please provide a valid ConvertKit API key.',
                 'Error message'   => $e->getMessage(),
             ]);
-            
+
             return false;
         }
     }
-    
-    
+
     /**
      * @unreleased
      */
@@ -56,7 +55,7 @@ class API
     {
         return wp_remote_get("https://api.convertkit.com/v3/account?api_secret={$this->apiSecret}");
     }
-    
+
     /**
      * @unreleased
      */
@@ -64,7 +63,7 @@ class API
     {
         return $this->get('forms');
     }
-    
+
     /**
      * @unreleased
      */
@@ -72,7 +71,7 @@ class API
     {
         return $this->get('tags');
     }
-    
+
     /**
      * @unreleased
      */
@@ -80,7 +79,7 @@ class API
     {
         $this->subscribe('forms', $id, $subscriber);
     }
-    
+
     /**
      * @unreleased
      */
@@ -88,7 +87,7 @@ class API
     {
         $this->subscribe('tags', $id, $subscriber);
     }
-    
+
     /**
      * @unreleased
      */
@@ -97,7 +96,7 @@ class API
         if ($this->validateApiCredentials()) {
             $response = wp_remote_get("https://api.convertkit.com/v3/$entity?api_key={$this->apiKey}");
             $list = json_decode(wp_remote_retrieve_body($response), true);
-            
+
             return array_map(function ($item) {
                 return [
                     'id'   => $item['id'],
@@ -105,10 +104,10 @@ class API
                 ];
             }, $list[$entity]);
         }
-        
+
         return [];
     }
-    
+
     /**
      * @unreleased
      */
@@ -118,7 +117,7 @@ class API
             "https://api.convertkit.com/v3/$entity/$id/subscribe?api_key={$this->apiKey}",
             ['body' => $subscriber->toArray(), 'timeout' => 30]
         );
-        
+
         if (is_wp_error($response)) {
             Log::error(__('Error subscribing to ConvertKit', 'give-convertkit'), [
                 'error'      => $response->get_error_message(),
