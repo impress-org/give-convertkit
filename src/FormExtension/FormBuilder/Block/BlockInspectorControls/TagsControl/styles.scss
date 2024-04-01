@@ -1,0 +1,9 @@
+.givewp-convertkit-tag-controls {
+    cursor: pointer;
+
+    input[type="text"]:focus {
+        border-color: transparent;
+        box-shadow: 0 0 0 1px transparent;
+        outline: 2px solid transparent;
+    }
+}
