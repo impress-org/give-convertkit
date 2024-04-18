@@ -36,7 +36,7 @@ export default function TagControls({
   const handleDefaultValues = () => {
     if (selectedTags) {
       return tagOptions.filter(({ value, label }) =>
-          selectedTags?.includes(value || label)
+          selectedTags?.includes(String(value) || label)
       );
     }
     return [];
