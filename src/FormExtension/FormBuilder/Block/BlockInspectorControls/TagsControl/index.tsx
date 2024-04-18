@@ -28,20 +28,20 @@ export default function TagControls({
   onChange,
 }: TagControlProps) {
   const [filteredValues, setFilteredValues] = useState<tag[]>([]);
-
+  
   useEffect(() => {
     setFilteredValues(handleDefaultValues());
   }, [selectedTags, tagOptions]);
-
+  
   const handleDefaultValues = () => {
     if (selectedTags) {
-      return tagOptions.filter(({ value }) =>
-        selectedTags?.includes(String(value))
+      return tagOptions.filter(({ value, label }) =>
+          selectedTags?.includes(value || label)
       );
     }
     return [];
   };
-
+  
   const handleChange = (tags: tag[]) => {
     const newTags = tags.map(({ value }) => value);
     onChange(newTags);
@@ -58,7 +58,7 @@ export default function TagControls({
       <ReactSelect
         isMulti
         name={"subscriptionTagListControl"}
-        placeholder={__("Add subscription tags to this form")}
+        placeholder={__("Add subscription tags to this form", 'give-convertkit')}
         value={filteredValues}
         options={tagOptions}
         onChange={handleChange}
