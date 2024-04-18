@@ -93,19 +93,19 @@ class API
      */
     protected function get($entity): array
     {
-        if ($this->validateApiCredentials()) {
-            $response = wp_remote_get("https://api.convertkit.com/v3/$entity?api_key={$this->apiKey}");
-            $list = json_decode(wp_remote_retrieve_body($response), true);
-
-            return array_map(function ($item) {
-                return [
-                    'id'   => $item['id'],
-                    'name' => $item['name'],
-                ];
-            }, $list[$entity]);
+        if (!$this->validateApiCredentials()) {
+            return [];
         }
 
-        return [];
+        $response = wp_remote_get("https://api.convertkit.com/v3/$entity?api_key={$this->apiKey}");
+        $list = json_decode(wp_remote_retrieve_body($response), true);
+
+        return array_map(function ($item) {
+            return [
+                'id'   => $item['id'],
+                'name' => $item['name'],
+            ];
+        }, $list[$entity]);
     }
 
     /**

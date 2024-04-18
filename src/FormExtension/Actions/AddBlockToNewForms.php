@@ -18,20 +18,22 @@ class AddBlockToNewForms
     {
         $convertkit = give(API::class);
 
-        if ($this->isEnabledGlobally() && $convertkit->validateApiCredentials()) {
-            $form->blocks->insertAfter(
-                'givewp/email',
-                BlockModel::make([
-                    'name'       => 'givewp-convertkit/convertkit',
-                    'attributes' => [
-                        'label'          => $this->getLabel(),
-                        'defaultChecked' => $this->getDefaultChecked(),
-                        'selectedForm'   => $this->getSelectedForm(),
-                        'tagSubscribers' => $this->getSelectedTags(),
-                    ],
-                ])
-            );
+        if (!$this->isEnabledGlobally() || !$convertkit->validateApiCredentials()) {
+            return;
         }
+
+        $form->blocks->insertAfter(
+            'givewp/email',
+            BlockModel::make([
+                'name'       => 'givewp-convertkit/convertkit',
+                'attributes' => [
+                    'label'          => $this->getLabel(),
+                    'defaultChecked' => $this->getDefaultChecked(),
+                    'selectedForm'   => $this->getSelectedForm(),
+                    'tagSubscribers' => $this->getSelectedTags(),
+                ],
+            ])
+        );
     }
 
     /**
