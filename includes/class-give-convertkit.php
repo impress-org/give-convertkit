@@ -890,7 +890,7 @@ class Give_ConvertKit_Settings {
 			// Checkboxes.
 			foreach ( $tags as $tag_id => $tag_name ) {
 
-				$options .= '<label class="list"><input type="checkbox" name="_give_' . esc_attr( $this->id ) . '_tags[]"  value="' . esc_attr( $tag_id ) . '" ' . checked( true, in_array( $tag_id, $value ), false ) . '> <span>' . $tag_name . '</span></label>';
+				$options .= '<label class="list"><input type="checkbox" name="_give_' . esc_attr( $this->id ) . '_tags[]"  value="' . esc_attr( $tag_id ) . '" ' . checked( true, is_array($value) && in_array($tag_id, $value), false ) . '> <span>' . $tag_name . '</span></label>';
 
 			}
 		}
