@@ -43,7 +43,7 @@ export default function TagControls({
   };
   
   const handleChange = (tags: tag[]) => {
-    const newTags = tags.map(({ value }) => value);
+    const newTags = tags.map(({ value }) => String(value));
     onChange(newTags);
   };
 
