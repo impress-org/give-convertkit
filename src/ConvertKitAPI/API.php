@@ -118,6 +118,8 @@ class API
             ['body' => $subscriber->toArray(), 'timeout' => 30]
         );
 
+        Log::http('Convertkit API has successfully subscribed a new email',[$response]);
+
         if (is_wp_error($response)) {
             Log::error(__('Error subscribing to ConvertKit', 'give-convertkit'), [
                 'error'      => $response->get_error_message(),
