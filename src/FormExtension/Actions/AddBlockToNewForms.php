@@ -4,6 +4,7 @@ namespace GiveConvertKit\FormExtension\Actions;
 
 use Give\DonationForms\Models\DonationForm;
 use Give\Framework\Blocks\BlockModel;
+use GiveConvertKit\ConvertKitAPI\API;
 
 /**
  * @unreleased
@@ -15,17 +16,24 @@ class AddBlockToNewForms
      */
     public function __invoke(DonationForm $form)
     {
-        if($this->isEnabledGlobally()) {
-            $form->blocks->insertAfter('givewp/email', BlockModel::make([
-                'name' => 'givewp-convertkit/convertkit',
+        $convertkit = give(API::class);
+
+        if (!$this->isEnabledGlobally() || !$convertkit->validateApiCredentials()) {
+            return;
+        }
+
+        $form->blocks->insertAfter(
+            'givewp/email',
+            BlockModel::make([
+                'name'       => 'givewp-convertkit/convertkit',
                 'attributes' => [
-                    'label' => $this->getLabel(),
+                    'label'          => $this->getLabel(),
                     'defaultChecked' => $this->getDefaultChecked(),
-                    'selectedForm' => $this->getSelectedForm(),
+                    'selectedForm'   => $this->getSelectedForm(),
                     'tagSubscribers' => $this->getSelectedTags(),
                 ],
-            ]));
-        }
+            ])
+        );
     }
 
     /**
@@ -33,7 +41,7 @@ class AddBlockToNewForms
      */
     public function isEnabledGlobally(): bool
     {
-        return give_is_setting_enabled(give_get_option( 'give_convertkit_show_subscribe_checkbox'));
+        return give_is_setting_enabled(give_get_option('give_convertkit_show_subscribe_checkbox'));
     }
 
     /**
