@@ -25,7 +25,7 @@ class RenderDonationFormBlock
     {
         $convertkit = give(API::class);
 
-        if ($convertkit->validateApiCredentials()) {
+        if (!$convertkit->validateApiCredentials()) {
             return null;
         }
 
