@@ -49,7 +49,7 @@ class AddBlockToNewForms
      */
     public function getLabel(): string
     {
-        return give_get_option('give_convertkit_label');
+        return give_get_option('give_convertkit_label', __('Subscribe to our newsletter?'));
     }
 
     /**
