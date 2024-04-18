@@ -19,7 +19,7 @@ export default function BlockPlaceholder({ defaultChecked, label }) {
         createInterpolateElement(
           __(
             "This block requires additional setup. Go to your <a>Settings</a> to connect your ConvertKit account.",
-            "give"
+            "give-convertkit"
           ),
           {
             a: (

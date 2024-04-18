@@ -28,12 +28,15 @@ export default function BlockInspectorControls({ attributes, setAttributes }) {
       >
         {requiresSetup ? (
           <BlockNotice
-            title={__("ConvertKit requires setup", "give")}
+            title={__("ConvertKit requires setup", "give-convertkit")}
             description={__(
               "This block requires your settings to be configured in order to use.",
-              "give"
+              "give-convertkit"
             )}
-            anchorText={__("Connect your ConvertKit account", "give")}
+            anchorText={__(
+              "Connect your ConvertKit account",
+              "give-convertkit"
+            )}
             href={settingsUrl}
           />
         ) : (
@@ -71,9 +74,9 @@ export default function BlockInspectorControls({ attributes, setAttributes }) {
               id={"givewp-convertkit-controls-tags"}
               help={__(
                 "These tags will be applied to Subscribers based on the form they used to sign up.",
-                "give-activecampaign"
+                "give-convertkit"
               )}
-              label={__("Subscriber Tags", "give-mailchimp")}
+              label={__("Subscriber Tags", "give-convertkit")}
               onChange={(tag) => setAttributes({ tagSubscribers: tag })}
               tagOptions={tagsListOptions}
               selectedTags={tagSubscribers}
