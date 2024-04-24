@@ -118,18 +118,29 @@ class API
             ['body' => $subscriber->toArray(), 'timeout' => 30]
         );
 
-        Log::http('Convertkit API has successfully subscribed a new email',[$response]);
-
         if (is_wp_error($response)) {
             Log::error(__('Error subscribing to ConvertKit', 'give-convertkit'), [
                 'error'      => $response->get_error_message(),
                 'subscriber' => $subscriber->toArray(),
             ]);
-        } elseif ( ! in_array(wp_remote_retrieve_response_code($response), [200, 201])) {
+            return;
+        }
+
+        if ( ! in_array(wp_remote_retrieve_response_code($response), [200, 201])) {
             Log::error(__('Error subscribing to ConvertKit', 'give-convertkit'), [
                 'error'      => wp_remote_retrieve_body($response),
                 'subscriber' => $subscriber->toArray(),
             ]);
+            return;
         }
+
+        $httpMessage = $entity === 'tags' ?
+            'Convertkit API has successfully subscribed a new email tag' :
+            'Convertkit API has successfully subscribed a new email';
+
+            Log::http($httpMessage,
+                ['response' => $response,
+                 'subscriber' => $subscriber->toArray(),
+                ]);
     }
 }
