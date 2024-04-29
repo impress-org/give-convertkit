@@ -13,7 +13,7 @@ export default function BlockInspectorControls({ attributes, setAttributes }) {
     label,
     defaultChecked,
     tagSubscribers,
-    selectedForm = "",
+    selectedForms = [""],
   } = attributes;
 
   const tagsListOptions = tags.map(function ({ id, name }) {
@@ -65,9 +65,9 @@ export default function BlockInspectorControls({ attributes, setAttributes }) {
 
             <ListsControl
               id={"givewp-convertkit-tag-controls"}
-              onChange={(values) => setAttributes({ selectedForm: values })}
+              onChange={(values) => setAttributes({ selectedForms: values })}
               lists={forms}
-              selectedLists={selectedForm}
+              selectedLists={selectedForms}
             />
 
             <TagControls
