@@ -25,14 +25,14 @@ class RenderDonationFormBlock
     {
         $convertkit = give(API::class);
 
-        if (!$convertkit->validateApiCredentials()) {
+        if ( ! $convertkit->validateApiCredentials()) {
             return null;
         }
 
         return ConvertKitField::make('convertkit')
             ->label((string)$block->getAttribute('label'))
             ->checked((bool)$block->getAttribute('defaultChecked'))
-            ->selectedForm((string)$block->getAttribute('selectedForm'))
+            ->selectedForms((array)$block->getAttribute('selectedForm'))
             ->tagSubscribers((array)$block->getAttribute('tagSubscribers'))
             ->scope(function (ConvertKitField $field, $value, Donation $donation) {
                 // If the field is checked, subscribe the donor to the list.
@@ -40,8 +40,12 @@ class RenderDonationFormBlock
                     $convertkit = give(API::class);
                     $subscriber = \GiveConvertKit\ConvertKitAPI\Subscriber::fromDonor($donation->donor);
 
-                    if ($field->getSelectedForm()) {
-                        $convertkit->subscribeToFormList($field->getSelectedForm(), $subscriber);
+                    if (is_array($field->getSelectedForms())) {
+                        foreach ($field->getSelectedForms() as $id) {
+                            $convertkit->subscribeToFormList($id, $subscriber);
+                        }
+                    } else {
+                        $convertkit->subscribeToFormList($field->getSelectedForms(), $subscriber);
                     }
 
                     if ($field->getTagSubscribers()) {
