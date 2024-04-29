@@ -136,12 +136,13 @@ class API
 
         if ($responseCode === 200) {
             $httpMessage = $entity === 'tags' ?
-                'Convertkit API has successfully subscribed a new email tag' :
+                'Convertkit API has successfully added a new email tag' :
                 'Convertkit API has successfully subscribed a new email';
 
             Log::http(
                 $httpMessage,
                 [
+                    'id'         => $id,
                     'response'   => $response,
                     'subscriber' => $subscriber->toArray(),
                 ]
