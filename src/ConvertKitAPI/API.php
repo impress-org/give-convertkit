@@ -75,7 +75,7 @@ class API
     /**
      * @unreleased
      */
-    public function subscribeToFormList($id, Subscriber $subscriber)
+    public function subscribeToFormList($id, Subscriber $subscriber): void
     {
         $this->subscribe('forms', $id, $subscriber);
     }
@@ -83,7 +83,7 @@ class API
     /**
      * @unreleased
      */
-    public function subscriberToTag($id, Subscriber $subscriber)
+    public function subscriberToTag($id, Subscriber $subscriber): void
     {
         $this->subscribe('tags', $id, $subscriber);
     }
@@ -102,7 +102,7 @@ class API
 
         return array_map(function ($item) {
             return [
-                'id'   => $item['id'],
+                'id'   => (string)$item['id'],
                 'name' => $item['name'],
             ];
         }, $list[$entity]);
@@ -111,42 +111,57 @@ class API
     /**
      * @unreleased
      */
-    protected function subscribe($entity, $id, Subscriber $subscriber): void
+    protected function subscribe($entity, $id, Subscriber $subscriber)
     {
         $response = wp_remote_post(
-            "https://api.convertkit.com/v3/$entity/$id/subscribe?api_key={$this->apiKey}",
-            ['body' => $subscriber->toArray(), 'timeout' => 30]
+            "https://api.convertkit.com/v3/$entity/#$id/subscribe?$this->apiKey)",
+            ['body' => $subscriber->toArray()]
         );
 
-        $responseCode = wp_remote_retrieve_response_code($response);
+        $successfulResponse = in_array(wp_remote_retrieve_response_code($response), [200, 201]);
+
+        $httpMessages = [
+            'tags'  => [
+                'success' => __('Convertkit API has successfully added a new email tag'),
+                'error'   => __('Convertkit API has encountered an error while subscribing a new email tag'),
+            ],
+            'forms' => [
+                'success' => __('Convertkit API has successfully subscribed a new email'),
+                'error'   => __('Convertkit API has encountered an error while subscribing a new email'),
+            ],
+        ];
+
+        $httpSuccessMessage = isset($httpMessages[$entity]) && $httpMessages[$entity]['success'];
+        $httpErrorMessage = isset($httpMessages[$entity]) && $httpMessages[$entity]['error'];
 
         if (is_wp_error($response)) {
-            Log::error(__('Error subscribing to ConvertKit', 'give-convertkit'), [
+            Log::error($httpErrorMessage, [
+                'id'         => $id,
                 'error'      => $response->get_error_message(),
                 'subscriber' => $subscriber->toArray(),
             ]);
+
+            return;
         }
 
-        if ( ! in_array(wp_remote_retrieve_response_code($response), [200, 201])) {
-            Log::error(__('Error subscribing to ConvertKit', 'give-convertkit'), [
+        if ( ! $successfulResponse) {
+            Log::error($httpErrorMessage, [
+                'id'         => $id,
                 'error'      => wp_remote_retrieve_body($response),
                 'subscriber' => $subscriber->toArray(),
             ]);
+
+            return;
         }
 
-        if ($responseCode === 200) {
-            $httpMessage = $entity === 'tags' ?
-                'Convertkit API has successfully added a new email tag' :
-                'Convertkit API has successfully subscribed a new email';
-
-            Log::http(
-                $httpMessage,
-                [
-                    'id'         => $id,
-                    'response'   => $response,
-                    'subscriber' => $subscriber->toArray(),
-                ]
-            );
-        }
+        Log::success(
+            $httpSuccessMessage,
+            [
+                'id'         => $id,
+                'response'   => wp_remote_retrieve_body($response),
+                'subscriber' => $subscriber->toArray(),
+            ]
+        );
     }
 }
+
