@@ -6,6 +6,7 @@ use Give\Donations\Models\Donation;
 use Give\Framework\Blocks\BlockModel;
 use Give\Framework\FieldsAPI\Contracts\Node;
 use Give\Framework\FieldsAPI\Exceptions\EmptyNameException;
+use Give\Log\Log;
 use GiveConvertKit\ConvertKitAPI\API;
 use GiveConvertKit\ConvertKitAPI\Subscriber;
 use GiveConvertKit\FormExtension\DonationForm\Fields\ConvertKitField;

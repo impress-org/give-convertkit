@@ -75,7 +75,7 @@ class API
     /**
      * @unreleased
      */
-    public function subscribeToFormList($id, Subscriber $subscriber): void
+    public function subscribeToFormList(string $id, Subscriber $subscriber): void
     {
         $this->subscribe('forms', $id, $subscriber);
     }
@@ -83,7 +83,7 @@ class API
     /**
      * @unreleased
      */
-    public function subscriberToTag($id, Subscriber $subscriber): void
+    public function subscriberToTag(string $id, Subscriber $subscriber): void
     {
         $this->subscribe('tags', $id, $subscriber);
     }
@@ -91,7 +91,7 @@ class API
     /**
      * @unreleased
      */
-    protected function get($entity): array
+    protected function get(string $entity): array
     {
         if ( ! $this->validateApiCredentials()) {
             return [];
@@ -111,19 +111,19 @@ class API
     /**
      * @unreleased
      */
-    protected function subscribe($entity, $id, Subscriber $subscriber)
+    protected function subscribe(string $entity, string $id, Subscriber $subscriber): void
     {
-        $response = wp_remote_post(
-            "https://api.convertkit.com/v3/$entity/#$id/subscribe?$this->apiKey)",
-            ['body' => $subscriber->toArray()]
-        );
+        $url = "https://api.convertkit.com/v3/$entity/$id/subscribe?api_key={$this->apiKey}";
 
-        $successfulResponse = in_array(wp_remote_retrieve_response_code($response), [200, 201]);
-        $httpMessage = $this->getHttpMessages($entity, $successfulResponse);
+        $response = wp_remote_post($url, ['body' => $subscriber->toArray(), 'timeout' => 30]);
+        $statusCode = wp_remote_retrieve_response_code($response);
+
+        $httpMessage = $this->getHttpMessages($entity, $statusCode);
 
         if (is_wp_error($response)) {
             Log::error($httpMessage, [
-                'id'         => $id,
+                'status'     => $statusCode,
+                'identifier' => $id,
                 'error'      => $response->get_error_message(),
                 'subscriber' => $subscriber->toArray(),
             ]);
@@ -131,9 +131,10 @@ class API
             return;
         }
 
-        if ( ! $successfulResponse) {
+        if ( ! in_array($statusCode, [200, 201], true)) {
             Log::error($httpMessage, [
-                'id'         => $id,
+                'status'     => $statusCode,
+                'identifier' => $id,
                 'error'      => wp_remote_retrieve_body($response),
                 'subscriber' => $subscriber->toArray(),
             ]);
@@ -141,17 +142,15 @@ class API
             return;
         }
 
-        Log::success(
-            $httpMessage,
-            [
-                'id'         => $id,
-                'response'   => wp_remote_retrieve_body($response),
-                'subscriber' => $subscriber->toArray(),
-            ]
-        );
+        Log::http($httpMessage, [
+            'status'     => $statusCode,
+            'identifier' => $id,
+            'entity'     => $entity,
+            'response'   => $response,
+        ]);
     }
 
-    protected function getHttpMessages($entity, $successfulResponse): string
+    protected function getHttpMessages(string $entity, int $statusCode): string
     {
         $httpMessages = [
             'tags'  => [
@@ -164,7 +163,9 @@ class API
             ],
         ];
 
-        return $successfulResponse ? $httpMessages[$entity]['success'] : $httpMessages[$entity]['error'];
+        $success = in_array($statusCode, [200, 201], true);
+
+        return $success ? $httpMessages[$entity]['success'] : $httpMessages[$entity]['error'];
     }
 }
 
