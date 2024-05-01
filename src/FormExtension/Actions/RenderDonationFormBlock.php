@@ -7,6 +7,7 @@ use Give\Framework\Blocks\BlockModel;
 use Give\Framework\FieldsAPI\Contracts\Node;
 use Give\Framework\FieldsAPI\Exceptions\EmptyNameException;
 use GiveConvertKit\ConvertKitAPI\API;
+use GiveConvertKit\ConvertKitAPI\Subscriber;
 use GiveConvertKit\FormExtension\DonationForm\Fields\ConvertKitField;
 
 class RenderDonationFormBlock
@@ -32,25 +33,23 @@ class RenderDonationFormBlock
         return ConvertKitField::make('convertkit')
             ->label((string)$block->getAttribute('label'))
             ->checked((bool)$block->getAttribute('defaultChecked'))
-            ->selectedForms((array)$block->getAttribute('selectedForm'))
+            ->selectedForms((array)$block->getAttribute('selectedForms'))
             ->tagSubscribers((array)$block->getAttribute('tagSubscribers'))
             ->scope(function (ConvertKitField $field, $value, Donation $donation) {
                 // If the field is checked, subscribe the donor to the list.
                 if (filter_var($value, FILTER_VALIDATE_BOOLEAN)) {
                     $convertkit = give(API::class);
-                    $subscriber = \GiveConvertKit\ConvertKitAPI\Subscriber::fromDonor($donation->donor);
+                    $subscriber = Subscriber::fromDonor($donation->donor);
 
-                    if (is_array($field->getSelectedForms())) {
+                    if ($field->getSelectedForms()) {
                         foreach ($field->getSelectedForms() as $id) {
                             $convertkit->subscribeToFormList($id, $subscriber);
                         }
-                    } else {
-                        $convertkit->subscribeToFormList($field->getSelectedForms(), $subscriber);
                     }
 
                     if ($field->getTagSubscribers()) {
-                        foreach ($field->getTagSubscribers() as $tagId) {
-                            $convertkit->subscriberToTag($tagId, $subscriber);
+                        foreach ($field->getTagSubscribers() as $id) {
+                            $convertkit->subscriberToTag($id, $subscriber);
                         }
                     }
                 }
