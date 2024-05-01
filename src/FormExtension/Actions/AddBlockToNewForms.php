@@ -65,7 +65,7 @@ class AddBlockToNewForms
      */
     protected function getSelectedForms()
     {
-        return give_get_option('give_convertkit_list');
+        return (array)give_get_option('give_convertkit_list', []);
     }
 
     /**
