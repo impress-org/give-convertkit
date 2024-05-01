@@ -8,16 +8,16 @@ class ConvertKitField extends Checkbox
 {
     public const TYPE = 'convertkit';
 
-    protected $selectedForm;
+    protected $selectedForms;
 
     protected $tagSubscribers;
 
     /**
      * @unreleased
      */
-    public function selectedForms(array|string $selectedForm): ConvertKitField
+    public function selectedForms(array $selectedForms): ConvertKitField
     {
-        $this->selectedForm = $selectedForm;
+        $this->selectedForms = $selectedForms;
 
         return $this;
     }
@@ -25,9 +25,9 @@ class ConvertKitField extends Checkbox
     /**
      * @unreleased
      */
-    public function getSelectedForms(): array|string
+    public function getSelectedForms(): array
     {
-        return $this->selectedForm;
+        return $this->selectedForms;
     }
 
     /**
