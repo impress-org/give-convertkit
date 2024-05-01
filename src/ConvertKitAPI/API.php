@@ -119,23 +119,10 @@ class API
         );
 
         $successfulResponse = in_array(wp_remote_retrieve_response_code($response), [200, 201]);
-
-        $httpMessages = [
-            'tags'  => [
-                'success' => __('Convertkit API has successfully added a new email tag'),
-                'error'   => __('Convertkit API has encountered an error while subscribing a new email tag'),
-            ],
-            'forms' => [
-                'success' => __('Convertkit API has successfully subscribed a new email'),
-                'error'   => __('Convertkit API has encountered an error while subscribing a new email'),
-            ],
-        ];
-
-        $httpSuccessMessage = isset($httpMessages[$entity]) && $httpMessages[$entity]['success'];
-        $httpErrorMessage = isset($httpMessages[$entity]) && $httpMessages[$entity]['error'];
+        $httpMessage = $this->getHttpMessages($entity, $successfulResponse);
 
         if (is_wp_error($response)) {
-            Log::error($httpErrorMessage, [
+            Log::error($httpMessage, [
                 'id'         => $id,
                 'error'      => $response->get_error_message(),
                 'subscriber' => $subscriber->toArray(),
@@ -145,7 +132,7 @@ class API
         }
 
         if ( ! $successfulResponse) {
-            Log::error($httpErrorMessage, [
+            Log::error($httpMessage, [
                 'id'         => $id,
                 'error'      => wp_remote_retrieve_body($response),
                 'subscriber' => $subscriber->toArray(),
@@ -155,13 +142,29 @@ class API
         }
 
         Log::success(
-            $httpSuccessMessage,
+            $httpMessage,
             [
                 'id'         => $id,
                 'response'   => wp_remote_retrieve_body($response),
                 'subscriber' => $subscriber->toArray(),
             ]
         );
+    }
+
+    protected function getHttpMessages($entity, $successfulResponse): string
+    {
+        $httpMessages = [
+            'tags'  => [
+                'success' => __('Convertkit API has successfully added a new email tag'),
+                'error'   => __('Convertkit API has encountered an error while adding a new email tag'),
+            ],
+            'forms' => [
+                'success' => __('Convertkit API has successfully subscribed a new email'),
+                'error'   => __('Convertkit API has encountered an error while subscribing a new email'),
+            ],
+        ];
+
+        return $successfulResponse ? $httpMessages[$entity]['success'] : $httpMessages[$entity]['error'];
     }
 }
 
