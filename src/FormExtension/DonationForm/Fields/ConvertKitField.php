@@ -3,30 +3,31 @@
 namespace GiveConvertKit\FormExtension\DonationForm\Fields;
 
 use Give\Framework\FieldsAPI\Checkbox;
-use Give\Framework\FieldsAPI\Field;
 
 class ConvertKitField extends Checkbox
 {
-    protected $selectedForm;
-    protected $tagSubscribers;
-
     public const TYPE = 'convertkit';
+
+    protected $selectedForms;
+
+    protected $tagSubscribers;
 
     /**
      * @unreleased
      */
-    public function selectedForm(string $selectedForm): ConvertKitField
+    public function selectedForms(array $selectedForms): ConvertKitField
     {
-        $this->selectedForm = $selectedForm;
+        $this->selectedForms = $selectedForms;
+
         return $this;
     }
 
     /**
      * @unreleased
      */
-    public function getSelectedForm(): string
+    public function getSelectedForms(): array
     {
-        return $this->selectedForm;
+        return $this->selectedForms;
     }
 
     /**
@@ -35,6 +36,7 @@ class ConvertKitField extends Checkbox
     public function tagSubscribers(array $tagSubscribers): ConvertKitField
     {
         $this->tagSubscribers = $tagSubscribers;
+
         return $this;
     }
 

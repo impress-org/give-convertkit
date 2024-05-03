@@ -18,7 +18,7 @@ class AddBlockToNewForms
     {
         $convertkit = give(API::class);
 
-        if (!$this->isEnabledGlobally() || !$convertkit->validateApiCredentials()) {
+        if ( ! $this->isEnabledGlobally() || ! $convertkit->validateApiCredentials()) {
             return;
         }
 
@@ -29,7 +29,7 @@ class AddBlockToNewForms
                 'attributes' => [
                     'label'          => $this->getLabel(),
                     'defaultChecked' => $this->getDefaultChecked(),
-                    'selectedForm'   => $this->getSelectedForm(),
+                    'selectedForms'  => $this->getSelectedForms(),
                     'tagSubscribers' => $this->getSelectedTags(),
                 ],
             ])
@@ -63,9 +63,9 @@ class AddBlockToNewForms
     /**
      * @unreleased
      */
-    protected function getSelectedForm()
+    protected function getSelectedForms()
     {
-        return give_get_option('give_convertkit_list');
+        return (array)give_get_option('give_convertkit_list', []);
     }
 
     /**
