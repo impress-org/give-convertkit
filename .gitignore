@@ -1,6 +1,30 @@
-# IDE
-.idea
-.svn
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
 
-# Gulp / Grunt
-/node_modules
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Mac
+.DS_Store
+
+# Sublime
+*.sublime-project
+*.sublime-workspace
+
+# PhpStorm
+.idea/
+
+# Eclipse
+*.pydevproject
+.project
+.metadata
+
+# Package managers
+/node_modules/
+/vendor/
+composer.lock
+/build/

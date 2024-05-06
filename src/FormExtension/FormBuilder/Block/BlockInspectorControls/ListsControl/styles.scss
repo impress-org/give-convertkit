@@ -1,0 +1,32 @@
+#givewp-convertkit-lists-control {
+    &__label {
+        display: inline-block;
+        padding: 0;
+        font-weight: 500;
+        line-height: 1.4;
+        text-transform: uppercase;
+        color: inherit;
+    }
+
+    &__help {
+        margin: 1rem 0 0 0;
+    }
+
+    &__groups {
+        display: flex;
+        align-items: center;
+        margin: 0;
+
+        .components-base-control__field {
+            margin: 0;
+
+            .components-checkbox-control__input-container {
+                margin-left: 2rem;
+            }
+        }
+    }
+
+    .block-editor-block-inspector, .components-base-control {
+        margin: .5rem 0 0 0 !important;
+    }
+}

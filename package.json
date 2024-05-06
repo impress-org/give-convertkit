@@ -1,11 +1,31 @@
 {
-  "name": "give-constant-contact",
-  "private": true,
+  "name": "give-convertkit",
+  "scripts": {
+    "dev": "npm run build",
+    "watch": "wp-scripts start src/FormExtension/FormBuilder src/FormExtension/DonationForm",
+    "build": "wp-scripts build src/FormExtension/FormBuilder src/FormExtension/DonationForm"
+  },
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-sort": "^2.0.0",
-    "gulp-wp-pot": "^1.2.2",
-    "gulp-checktextdomain": "^1.0.2",
-    "fs-extra": "^1.0.0"
+    "@babel/eslint-parser": "^7.22.15",
+    "@babel/preset-typescript": "^7.22.15",
+    "@prettier/plugin-php": "^0.16.2",
+    "@stylelint/prettier-config": "^2.0.0",
+    "@types/react": "^18.2.21",
+    "@types/wordpress__blocks": "^12.5.3",
+    "@wordpress/eslint-plugin": "^9.0.1",
+    "@wordpress/scripts": "^26.12.0",
+    "@wordpress/stylelint-config": "^19.0.1"
+  },
+  "engines": {
+    "node": ">=15.12.0"
+  },
+  "dependencies": {
+    "@givewp/form-builder-library": "^1.4.0",
+    "@wordpress/block-editor": "^12.9.0",
+    "@wordpress/blocks": "^12.18.0",
+    "@wordpress/element": "^5.18.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-select": "^5.8.0"
   }
 }
