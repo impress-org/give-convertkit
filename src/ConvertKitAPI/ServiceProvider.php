@@ -5,12 +5,12 @@ namespace GiveConvertKit\ConvertKitAPI;
 use Give\ServiceProviders\ServiceProvider as ServiceProviderInterface;
 
 /**
- * @unreleased
+ * @since 2.0.0
  */
 class ServiceProvider implements ServiceProviderInterface
 {
     /**
-     * @unreleased
+     * @since 2.0.0
      * @inheritDoc
      */
     public function register(): void
@@ -24,7 +24,7 @@ class ServiceProvider implements ServiceProviderInterface
     }
     
     /**
-     * @unreleased
+     * @since 2.0.0
      * @inheritDoc
      */
     public function boot(): void

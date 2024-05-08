@@ -13,7 +13,7 @@ const settings = {
 };
 
 /**
- * @unreleased
+ * @since 2.0.0
  */
 const block: {name: string; settings: BlockConfiguration} = {name, settings};
 

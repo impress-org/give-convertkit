@@ -3,30 +3,30 @@
 namespace GiveConvertKit\FormExtension\Actions;
 
 /**
- * @unreleased
+ * @since 2.0.0
  */
 class EnqueueDonationFormScripts
 {
     /**
-     * @unreleased
+     * @since 2.0.0
      * @var string
      */
     protected $styleSrc;
 
     /**
-     * @unreleased
+     * @since 2.0.0
      * @var string
      */
     protected $scriptSrc;
 
     /**
-     * @unreleased
+     * @since 2.0.0
      * @var array
      */
     protected $scriptAsset;
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function __construct()
     {
@@ -36,7 +36,7 @@ class EnqueueDonationFormScripts
     }
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function __invoke()
     {

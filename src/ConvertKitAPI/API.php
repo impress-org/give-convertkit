@@ -6,22 +6,22 @@ use Give\Framework\Exceptions\Primitives\Exception;
 use Give\Log\Log;
 
 /**
- * @unreleased
+ * @since 2.0.0
  */
 class API
 {
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     protected $apiKey;
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     protected $apiSecret;
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function __construct($apiKey, $apiSecret)
     {
@@ -30,7 +30,7 @@ class API
     }
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function validateApiCredentials(): bool
     {
@@ -49,7 +49,7 @@ class API
     }
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function getAccount()
     {
@@ -57,7 +57,7 @@ class API
     }
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function getForms(): array
     {
@@ -65,7 +65,7 @@ class API
     }
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function getTags(): array
     {
@@ -73,7 +73,7 @@ class API
     }
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function subscribeToFormList(string $id, Subscriber $subscriber): void
     {
@@ -81,7 +81,7 @@ class API
     }
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function subscriberToTag(string $id, Subscriber $subscriber): void
     {
@@ -89,7 +89,7 @@ class API
     }
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     protected function get(string $entity): array
     {
@@ -109,7 +109,7 @@ class API
     }
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     protected function subscribe(string $entity, string $id, Subscriber $subscriber): void
     {

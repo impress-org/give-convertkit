@@ -2,7 +2,7 @@ import type { BlockConfiguration } from "@wordpress/blocks";
 import { __ } from "@wordpress/i18n";
 
 /**
- * @unreleased
+ * @since 2.0.0
  */
 const metadata: BlockConfiguration = {
   name: "givewp-convertkit/convertkit",

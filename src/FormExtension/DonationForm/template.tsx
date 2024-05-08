@@ -4,7 +4,7 @@ import "./styles.scss"
 const {checkbox: Checkbox} = window.givewp.form.templates.fields;
 
 /**
- * @unreleased
+ * @since 2.0.0
  */
 export default function FieldTemplate({ErrorMessage, label, checked, inputProps}) {
     return (

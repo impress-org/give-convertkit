@@ -3,7 +3,7 @@ import {Path, SVG} from '@wordpress/components';
 /**
  * ConvertKit Logomark Red
  * @link https://convertkit.com/brand
- * @unreleased
+ * @since 2.0.0
  */
 const Icon = (
     <SVG width="172" height="160" viewBox="0 0 172 160" fill="none" xmlns="http://www.w3.org/2000/svg">

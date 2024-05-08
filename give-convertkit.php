@@ -3,7 +3,9 @@
  * Plugin Name: Give - ConvertKit
  * Plugin URI: https://givewp.com/addons/convertkit/
  * Description: Easily integrate ConvertKit opt-ins within your Give donation forms.
- * Version: 1.0.3
+ * Version: 2.0.0
+ * Requires PHP: 7.2
+ * Requires at least: 6.3
  * Author: GiveWP
  * Author URI: https://givewp.com
  * Text Domain: give-convertkit
@@ -11,11 +13,11 @@
 
 //Define constants.
 if ( ! defined( 'GIVE_CONVERTKIT_VERSION' ) ) {
-	define( 'GIVE_CONVERTKIT_VERSION', '1.0.3' );
+	define( 'GIVE_CONVERTKIT_VERSION', '2.0.0' );
 }
 
 if ( ! defined( 'GIVE_CONVERTKIT_MIN_GIVE_VERSION' ) ) {
-	define( 'GIVE_CONVERTKIT_MIN_GIVE_VERSION', '2.5.0' );
+	define( 'GIVE_CONVERTKIT_MIN_GIVE_VERSION', '3.11.0' );
 }
 
 if ( ! defined( 'GIVE_CONVERTKIT_FILE' ) ) {
@@ -81,7 +83,7 @@ if ( ! class_exists( 'Give_ConvertKit' ) ) {
 		public $label = 'ConvertKit';
 
         /**
-         * @unreleased
+         * @since 2.0.0
          * @var array
          */
         private $serviceProviders = [
@@ -107,7 +109,7 @@ if ( ! class_exists( 'Give_ConvertKit' ) ) {
 		/**
 		 * Setup Give ConvertKit.
 		 *
-         * @unreleased register service providers
+         * @since 2.0.0 register service providers
 		 * @since 1.0.3
 		 * @access private
 		 */
@@ -125,7 +127,7 @@ if ( ! class_exists( 'Give_ConvertKit' ) ) {
         /**
          * Register service providers
          *
-         * @unreleased
+         * @since 2.0.0
          */
         public function registerServiceProviders()
         {

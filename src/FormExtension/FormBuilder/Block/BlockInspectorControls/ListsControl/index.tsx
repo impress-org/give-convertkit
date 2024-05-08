@@ -6,7 +6,7 @@ import {lists} from "../../window";
 import "./styles.scss";
 
 /**
- * @unreleased
+ * @since 2.0.0
  */
 type ListControlProps = {
   id: string;
@@ -18,7 +18,7 @@ type ListControlProps = {
 type selectedLists = string[];
 
 /**
- * @unreleased
+ * @since 2.0.0
  **/
 export default function ListsControl({
   id,
@@ -82,7 +82,7 @@ export default function ListsControl({
 }
 
 /**
- * @unreleased
+ * @since 2.0.0
  **/
 type ListCheckboxProps = {
   id: string;
@@ -92,7 +92,7 @@ type ListCheckboxProps = {
 };
 
 /**
- * @unreleased
+ * @since 2.0.0
  **/
 function ListCheckboxControl({
   name,

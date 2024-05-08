@@ -1,10 +1,11 @@
 === Give - ConvertKit ===
 Contributors: givewp
 Tags: give, convertkit, newsletter, email marketing
-Requires at least: 4.8
-Tested up to: 5.2
-Stable tag: 1.0.3
-Requires Give: 2.5.0
+Requires at least: 6.3
+Tested up to: 6.5
+Stable tag: 2.0.0
+Requires Give: 3.11.0
+Requires PHP: 7.2
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
 
@@ -18,9 +19,9 @@ This plugin requires the Give plugin activated to function properly. When activa
 
 = Minimum Requirements =
 
-* WordPress 4.8 or greater
-* PHP version 5.3 or greater
-* MySQL version 5.0 or greater
+* WordPress 6.3 or greater
+* PHP version 7.2 or greater
+* MySQL version 5.7 or greater
 
 = Automatic installation =
 
@@ -35,6 +36,9 @@ The manual installation method involves downloading our donation plugin and uplo
 Automatic updates should work like a charm; as always though, ensure you backup your site just in case.
 
 == Changelog ==
+
+= 2.0.0: May 8th, 2024 =
+* New: Added compatibility with the GiveWP visual donation form builder
 
 = 1.0.3: July 11th, 2019 =
 * Tweak: Removed deprecated hooks for added compatibility for Give Core 2.5.0+. Note: Please ensure you are using the latest version of Give Core prior to updating.

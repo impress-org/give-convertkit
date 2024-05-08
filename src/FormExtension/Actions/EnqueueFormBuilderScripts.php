@@ -7,25 +7,25 @@ use GiveConvertKit\ConvertKitAPI\API;
 class EnqueueFormBuilderScripts
 {
     /**
-     * @unreleased
+     * @since 2.0.0
      * @var string
      */
     protected $styleSrc;
 
     /**
-     * @unreleased
+     * @since 2.0.0
      * @var string
      */
     protected $scriptSrc;
 
     /**
-     * @unreleased
+     * @since 2.0.0
      * @var array
      */
     protected $scriptAsset;
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function __construct()
     {
@@ -35,7 +35,7 @@ class EnqueueFormBuilderScripts
     }
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function __invoke()
     {

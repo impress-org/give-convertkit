@@ -5,22 +5,22 @@ namespace GiveConvertKit\ConvertKitAPI;
 use Give\Donors\Models\Donor;
 
 /**
- * @unreleased
+ * @since 2.0.0
  */
 class Subscriber
 {
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     protected $email;
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     protected $name;
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function __construct($email, $name = false)
     {
@@ -29,7 +29,7 @@ class Subscriber
     }
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public static function fromDonor(Donor $donor): Subscriber
     {
@@ -37,7 +37,7 @@ class Subscriber
     }
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function toArray(): array
     {

@@ -3,7 +3,7 @@ import BlockPlaceholder from "./BlockPlaceholder";
 import BlockInspectorControls from "./BlockInspectorControls";
 
 /**
- * @unreleased
+ * @since 2.0.0
  */
 export default function Edit({
   attributes,

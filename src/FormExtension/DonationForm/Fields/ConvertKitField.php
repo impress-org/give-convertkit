@@ -13,7 +13,7 @@ class ConvertKitField extends Checkbox
     protected $tagSubscribers;
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function selectedForms(array $selectedForms): ConvertKitField
     {
@@ -23,7 +23,7 @@ class ConvertKitField extends Checkbox
     }
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function getSelectedForms(): array
     {
@@ -31,7 +31,7 @@ class ConvertKitField extends Checkbox
     }
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function tagSubscribers(array $tagSubscribers): ConvertKitField
     {
@@ -41,7 +41,7 @@ class ConvertKitField extends Checkbox
     }
 
     /**
-     * @unreleased
+     * @since 2.0.0
      */
     public function getTagSubscribers(): array
     {

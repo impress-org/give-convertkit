@@ -24,9 +24,17 @@
             "GiveConvertKit\\": "src/"
         }
     },
+     "autoload-dev": {
+        "psr-4": {
+            "GiveConvertKit\\Tests\\": "tests/"
+        }
+    },
     "config": {
         "platform": {
             "php": "7.2"
+        },
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     }
 }
