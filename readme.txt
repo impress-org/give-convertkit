@@ -37,7 +37,7 @@ Automatic updates should work like a charm; as always though, ensure you backup 
 
 == Changelog ==
 
-= 2.0.0: May 8th, 2024 =
+= 2.0.0: May 15th, 2024 =
 * New: Added compatibility with the GiveWP visual donation form builder
 
 = 1.0.3: July 11th, 2019 =
